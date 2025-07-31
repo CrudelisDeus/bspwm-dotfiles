@@ -25,12 +25,12 @@ create_dir_config() {
     # copy config
     for i in "${std_config[@]}"; do 
         mkdir -p ~/.config/$i
-        cp -r ./config/$i/* ~/.config/$i/
+        cp -r config/$i/* ~/.config/$i/
         chmod +x ~/.config/$i/*
     done
     
     # copy x conf
-    cp ./config/x/.xinitrc ~/.xinitrc
+    cp config/x/.xinitrc ~/.xinitrc
 }
 
 install_pkg() {
