@@ -4,6 +4,7 @@
 setxkbmap -option grp:alt_shift_toggle us,ru
 
 # auto start
+kitty &
 sxhkd &              
 $HOME/.config/polybar/launch.sh &   
 picom -b &           

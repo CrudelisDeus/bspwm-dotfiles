@@ -26,11 +26,14 @@ create_dir_config() {
     for i in "${std_config[@]}"; do 
         mkdir -p ~/.config/$i
         cp -r config/$i/* ~/.config/$i/
-        chmod +x ~/.config/$i/*
     done
     
     # copy x conf
     cp config/x/.xinitrc ~/.xinitrc
+
+    # chmod
+    chmod +x ~/.config/bspwm/bspwmrc
+    chmod +x ~/.config/polybar/launch.sh
 }
 
 install_pkg() {
@@ -41,7 +44,7 @@ install_pkg() {
     sudo pacman -S xf86-video-vesa --noconfirm
 
     # BSPWM and related packages
-    sudo pacman -S bspwm sxhkd polybar --noconfirm
+    sudo pacman -S bspwm sxhkd polybar picom --noconfirm
 
     # Terminal
     sudo pacman -S kitty --noconfirm
