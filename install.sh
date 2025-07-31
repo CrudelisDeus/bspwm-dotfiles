@@ -40,6 +40,9 @@ install_pkg() {
     # Xserver
     sudo pacman -S xorg-server xorg-xinit --noconfirm
 
+    # fonts
+    sudo pacman -S gnu-free-fonts --noconfirm
+
     # Videodriver (test)
     sudo pacman -S xf86-video-vesa --noconfirm
 
