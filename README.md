@@ -1,6 +1,6 @@
 <h1 align="left"> :gear: About</h1>
 
-<img src="./d-conf/readme/img/logo.svg" alt="logo" align="right" hidth="200px">
+<img src="./d-conf/readme/img/logo.svg" alt="logo" align="right" height="15.625rem">
 
 <br>
 
