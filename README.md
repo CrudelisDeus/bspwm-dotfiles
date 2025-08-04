@@ -3,7 +3,7 @@
 <!-- INFORMATION -->
 <h1 align="left">About</h1>
 
-<img src="./d-conf/readme/img/logo.svg" alt="logo" align="right" height="220px">
+<img src="./d-config/readme/img/logo.svg" alt="logo" align="right" height="220px">
 
 <br>
 
@@ -18,3 +18,21 @@
 </br>
 
 <!-- HOTKEYS -->
+
+
+<!-- ORIGINAL AUTHOR -->
+<h1 align="left">Original author</h1>
+
+<img src="./d-config/readme/img/heart.svg" alt="heart" align="right" height="220px">
+
+<br>
+
+- Thanks for the great std version
+- Not everything suits me
+- So I decided to make my own version
+- Original project author:
+- gh0stzk
+- Github: gh0stzk/dotfiles
+- Email: z0mbi3.zk@protonmail.com
+
+</br>
