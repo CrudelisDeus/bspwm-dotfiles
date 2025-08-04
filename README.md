@@ -1,4 +1,4 @@
-<h1 align="center">😈 DEUS version 😈</h1>
+<h1 align="center">DEUS version</h1>
 
 <!-- INFORMATION -->
 <h1 align="left">About</h1>
