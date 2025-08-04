@@ -1,6 +1,8 @@
-<h1 align="left"> :gear: About</h1>
+<h1 align="center">😈 DEUS version 😈</h1>
 
-<img src="./d-conf/readme/img/logo.svg" alt="logo" align="right" height="250px">
+<h1 align="left">About</h1>
+
+<img src="./d-conf/readme/img/logo.svg" alt="logo" align="right" height="195px">
 
 <br>
 
