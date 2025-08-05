@@ -575,7 +575,7 @@ backup_existing_config() {
 
         firefox_profile=$(find "$HOME/.mozilla/firefox" -maxdepth 1 -type d -name '*.default-release' 2>/dev/null | head -1)
         if [ -n "$firefox_profile" ]; then
-            backup_item d "${firefox_profile}/chrome" "chrome"
+            # backup_item d "${firefox_profile}/chrome" "chrome"
             backup_item f "${firefox_profile}/user.js" "user.js"
         fi
     fi
