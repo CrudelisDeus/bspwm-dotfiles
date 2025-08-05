@@ -851,16 +851,16 @@ install_displaymanager_dependencies() {
     sleep 2
 
     # List of dependencies
-    gh0stzk_dependencies="lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings"
+    dependencies="lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings"
 
     printf "%b\n\n" "${BLD}${CBL}Checking for required packages...${CNC}"
     sleep 2
 
     # Detect missing packages
-    missing_gh0stzk_pkgs=""
-    for pkg in $gh0stzk_dependencies; do
+    missing_pkgs="lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings"
+    for pkg in $dependencies; do
         if ! is_installed "$pkg"; then
-            missing_gh0stzk_pkgs="$missing_gh0stzk_pkgs $pkg"
+            missing_pkgs="$missing_pkgs $pkg"
             printf "%b\n" " ${BLD}${CYE}$pkg ${CRE}not installed${CNC}"
         else
             printf "%b\n" "${BLD}${CGR}$pkg ${CBL}already installed${CNC}"
@@ -868,6 +868,7 @@ install_displaymanager_dependencies() {
     done
 
     sudo systemctl enable lightdm.service
+
 
 # --- Main run --- #
 based_update
