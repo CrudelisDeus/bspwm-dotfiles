@@ -846,6 +846,7 @@ install_displaymanager_dependencies() {
     done
 
     sudo systemctl enable lightdm.service
+}
 
 final_prompt() {
     clear
