@@ -11,7 +11,7 @@
  - WM: [**BSPWM**](https://github.com/baskerville/bspwm)
  - Bar: [**Polybar**](https://github.com/polybar/polybar)
  - Compositor: [**Picom**](https://github.com/yshui/picom)
- - Terminal: [**kitty**](https://wiki.archlinux.org/title/Kitty)
+ - Terminal: [**Alerkitty**](https://github.com/alacritty/alacritty)
  - App Launcher: [**Rofi**](https://github.com/davatorium/rofi)
  - Shell: [**Zsh**](https://wiki.archlinux.org/title/Zsh)
 
@@ -28,11 +28,11 @@
 <br>
 
 - Thanks for the great std version
+- With a good nvim setup
 - Not everything suits me
 - So I decided to make my own version
 - Original project author:
 - gh0stzk
 - Github: gh0stzk/dotfiles
-- Email: z0mbi3.zk@protonmail.com
 
 </br>
