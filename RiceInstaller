@@ -823,28 +823,6 @@ change_default_shell() {
     sleep 3
 }
 
-final_prompt() {
-    clear
-    logo "Installation Complete"
-
-    printf "%b\n" "${BLD}${CGR}Installation completed successfully!${CNC}"
-    printf "%b\n\n" "${BLD}${CRE}You ${CBL}MUST ${CRE}restart your system to apply changes${CNC}"
-
-    while :; do
-        printf "%b" "${BLD}${CYE}Reboot now?${CNC} [y/N]: "
-        read -r yn
-        case "$yn" in
-            [Yy]) printf "\n%b\n" "${BLD}${CGR}Initiating reboot...${CNC}"
-                sleep 1
-                sudo reboot
-                break ;;
-            [Nn]|"") printf "\n%b\n\n" "${BLD}${CYE}You really need to reboot bro!!${CNC}"
-                    break ;;
-            *) printf " %b%bError:%b write 'y' or 'n'\n" "${BLD}" "${CRE}" "${CNC}" ;;
-        esac
-    done
-}
-
 install_displaymanager_dependencies() {
     clear
     logo "Installing needed packages repository..."
@@ -869,6 +847,27 @@ install_displaymanager_dependencies() {
 
     sudo systemctl enable lightdm.service
 
+final_prompt() {
+    clear
+    logo "Installation Complete"
+
+    printf "%b\n" "${BLD}${CGR}Installation completed successfully!${CNC}"
+    printf "%b\n\n" "${BLD}${CRE}You ${CBL}MUST ${CRE}restart your system to apply changes${CNC}"
+
+    while :; do
+        printf "%b" "${BLD}${CYE}Reboot now?${CNC} [y/N]: "
+        read -r yn
+        case "$yn" in
+            [Yy]) printf "\n%b\n" "${BLD}${CGR}Initiating reboot...${CNC}"
+                sleep 1
+                sudo reboot
+                break ;;
+            [Nn]|"") printf "\n%b\n\n" "${BLD}${CYE}You really need to reboot bro!!${CNC}"
+                    break ;;
+            *) printf " %b%bError:%b write 'y' or 'n'\n" "${BLD}" "${CRE}" "${CNC}" ;;
+        esac
+    done
+}
 
 # --- Main run --- #
 based_update
