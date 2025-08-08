@@ -25,8 +25,8 @@
     <img src="./d-config/readme/img/deus_pink.svg" alt="deus_pink" height="220px">
 </div>
 
-<video src="./d-config/readme/video/deus_pink.mp4" controls width="100%" poster="./d-config/readme/img/deus_pink.svg">
-</video>
+<video src="https://github.com/user-attachments/assets/162736344/0b260a3f-1971-45c7-a6ed-2ee1c39deae5" controls width="100%"></video>
+
 
 
 <!-- ORIGINAL AUTHOR -->
