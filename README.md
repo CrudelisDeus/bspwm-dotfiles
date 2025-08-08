@@ -35,7 +35,6 @@ https://github.com/user-attachments/assets/7e5627eb-b1e5-4354-bab1-319a2f35ef48
 <br>
 
 - Thanks for the great std version
-- With a good nvim setup
 - Not everything suits me
 - So I decided to make my own version
 - Original project author:
