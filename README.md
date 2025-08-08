@@ -20,13 +20,17 @@
 <!-- THEME PINK -->
 <h1 align="left">Theme</h1>
 
-<div align="center">
-    <h3 align="center">DEUS pink</h3>
+<div align="right">
     <img src="./d-config/readme/img/deus_pink.svg" alt="deus_pink" height="220px">
 </div>
 
-https://github.com/user-attachments/assets/7e5627eb-b1e5-4354-bab1-319a2f35ef48
+<br>
 
+<h3> DEUS pink </h3>
+<br>
+
+
+https://github.com/user-attachments/assets/7e5627eb-b1e5-4354-bab1-319a2f35ef48
 
 <!-- ORIGINAL AUTHOR -->
 <h1 align="left">Original author</h1>
