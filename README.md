@@ -17,7 +17,16 @@
 
 </br>
 
-<!-- HOTKEYS -->
+<!-- THEME PINK -->
+<h1 align="left">Theme</h1>
+
+<div align="center">
+    <h3 align="center">DEUS pink</h3>
+    <img src="./d-config/readme/img/deus_pink.svg" alt="deus_pink" height="220px">
+</div>
+
+<video src="./d-config/readme/video/deus_pink.mp4" controls width="100%" poster="./d-config/readme/img/deus_pink.svg">
+</video>
 
 
 <!-- ORIGINAL AUTHOR -->
