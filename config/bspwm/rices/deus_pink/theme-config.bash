@@ -103,7 +103,7 @@ geany_theme="z0mbi3-RosePineMoon"
 # - CustomImage	(Sets a specific image as wallpaper)
 # - CustomAnimated (Set an animated wallpaper. "mp4, mkv, gif")
 # - Slideshow (Change randomly every 15 minutes your wallpaper from Walls rice directory)
-ENGINE="Theme"
+ENGINE="CustomAnimated"
 CUSTOM_DIR="/path/to/dir"
 CUSTOM_WALL="/path/to/image"
-CUSTOM_ANIMATED="$HOME/.config/bspwm/src/assets/animated_wall.mp4"
+CUSTOM_ANIMATED="$HOME/animated_wallpapers/pink.mp4"
