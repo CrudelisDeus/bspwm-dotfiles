@@ -1,24 +1,8 @@
 #############################
-#		Deus Theme		#
+#		Cristina Theme		#
 #############################
-
-# Random animated wallpaper
-get_random_animated_wallpaper() {
-    local wallpaper_dir="$HOME/animated_wallpapers"
-    
-    # test exist dir
-    if [ ! -d "$wallpaper_dir" ]; then
-        echo "$HOME/animated_wallpapers/1.mp4"  # fallback
-        return
-    fi
-    
-    # search all files dir
-    local video_files=($(find "$wallpaper_dir" -type f \( -name "*.mp4" -o -name "*.mkv" -o -name "*.gif"\) 2>/dev/null))
-    
-    # pick random wallpaper
-    local random_index=$((RANDOM % ${#video_files[@]}))
-    echo "${video_files[$random_index]}"
-}
+# Copyright (C) 2021-2025 gh0stzk <z0mbi3.zk@protonmail.com>
+# https://github.com/gh0stzk/dotfiles
 
 # (Rose-Pine Moon) colorschenme
 bg="#232136"
@@ -122,4 +106,30 @@ geany_theme="z0mbi3-RosePineMoon"
 ENGINE="CustomAnimated"
 CUSTOM_DIR="/path/to/dir"
 CUSTOM_WALL="/path/to/image"
+
+
+get_random_animated_wallpaper() {
+    local wallpaper_dir="$HOME/animated_wallpapers"
+    
+    # test exist dir
+    if [ ! -d "$wallpaper_dir" ]; then
+        echo "$HOME/animated_wallpapers/1.mp4"  # fallback
+        return
+    fi
+    
+    # search all files dir
+    local video_files=($(find "$wallpaper_dir" -type f \( -name "*.mp4" -o -name "*.mkv" -o -name "*.gif"\) 2>/dev/null))
+    
+
+    if [ ${#video_files[@]} -eq 0 ]; then
+        echo "$HOME/animated_wallpapers/1.mp4"  # fallback
+        return
+    fi
+    
+    # pick random wallpaper
+    local random_index=$((RANDOM % ${#video_files[@]}))
+    echo "${video_files[$random_index]}"
+}
+
+
 CUSTOM_ANIMATED="$(get_random_animated_wallpaper)"
