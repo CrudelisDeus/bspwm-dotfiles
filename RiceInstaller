@@ -915,10 +915,13 @@ install_std_animated_wallpapers() {
         fi
     done
 
-    if sudo cp "$HOME/dotfiles/d-config/animated_wallpapers/." $HOME/animated_wallpapers; then
-        printf "%s%sAnimated wallpaper copied successfully!%s\n" "$BLD" "$CGR" "$CNC"
+    src="$HOME/dotfiles/d-config/animated_wallpapers"
+    dst="$HOME/animated_wallpapers"
+
+    if [ -d "$src" ] && [ "$(ls -A "$src")" ]; then
+        sudo cp -a "$src/." "$dst/"
     else
-        log_error "Failed to copy"
+        log_error "Source directory is missing or empty: $src"
     fi
 
     printf "\n%s%sDotfiles installed successfully!%s\n" "$BLD" "$CGR" "$CNC"
