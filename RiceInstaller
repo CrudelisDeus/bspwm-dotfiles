@@ -915,7 +915,7 @@ install_std_animated_wallpapers() {
         fi
     done
 
-    if sudo cp "$HOME/dotfiles/d-config/animated_wallpapers/*" $HOME/animated_wallpapers; then
+    if sudo cp "$HOME/dotfiles/d-config/animated_wallpapers/." $HOME/animated_wallpapers; then
         printf "%s%sAnimated wallpaper copied successfully!%s\n" "$BLD" "$CGR" "$CNC"
     else
         log_error "Failed to copy"
