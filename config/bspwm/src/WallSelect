@@ -13,10 +13,11 @@
 #   ✔ Lockfile system for safe concurrent operations
 #   ✔ Rofi integration with theme support
 #   ✔ Lightweight (~2ms overhead on cache hits)
+#   ✔ Support for both static and animated wallpapers
 #
 # Dependencies:
 #   → Core: bspwm, xrandr, xdpyinfo, rofi, xxhsum (xxhash)
-#   → Media: feh, imagemagick
+#   → Media: feh, imagemagick, mpv, xwinwrap
 #   → GNU: findutils, coreutils
 
 # Copyright (C) 2021-2025 gh0stzk <z0mbi3.zk@protonmail.com>
@@ -26,6 +27,7 @@
 # Set some variables
 read -r current_rice <"$HOME"/.config/bspwm/.rice
 wall_dir="$HOME/.config/bspwm/rices/$current_rice/walls"
+animated_dir="$HOME/animated_wallpapers"
 cacheDir="$HOME/.cache/$USER/$current_rice"
 
 # Create cache dir if not exists
@@ -69,7 +71,7 @@ export process_func_def cacheDir wall_dir
 # Clean old locks before starting
 rm -f "${cacheDir}"/.lock_* 2>/dev/null || true
 
-# Process files in parallel
+# Process static wallpaper files in parallel
 find "$wall_dir" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.webp" \) -print0 | \
     xargs -0 -P "$PARALLEL_JOBS" -I {} sh -c "$process_func_def; process_image \"{}\""
 
@@ -88,13 +90,63 @@ done
 # Clean any remaining lock files
 rm -f "${cacheDir}"/.lock_* 2>/dev/null || true
 
-# Launch rofi
-wall_selection=$(find "${wall_dir}" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.webp" \) -print0 |
-    xargs -0 basename -a |
-    LC_ALL=C sort |
-    while IFS= read -r A; do
-        printf '%s\000icon\037%s/%s\n' "$A" "$cacheDir" "$A"
-    done | $rofi_command)
+# Function to create animated wallpaper preview
+create_animated_preview() {
+    local video_file="$1"
+    local preview_file="${cacheDir}/$(basename "$video_file").jpg"
+    
+    # Create preview if it doesn't exist
+    if [ ! -f "$preview_file" ]; then
+        # Extract first frame as preview
+        ffmpeg -i "$video_file" -vframes 1 -vf "scale=500:500:force_original_aspect_ratio=decrease,pad=500:500:(ow-iw)/2:(oh-ih)/2" "$preview_file" -y >/dev/null 2>&1
+    fi
+}
 
-# Set wallpaper
-[ -n "$wall_selection" ] && feh --no-fehbg --bg-fill "${wall_dir}/${wall_selection}"
+# Process animated wallpapers
+if [ -d "$animated_dir" ]; then
+    find "$animated_dir" -type f \( -iname "*.mp4" -o -iname "*.mkv" -o -iname "*.gif" \) -print0 | \
+        while IFS= read -r -d '' video_file; do
+            create_animated_preview "$video_file"
+        done
+fi
+
+# Launch rofi with both static and animated wallpapers
+wall_selection=$({
+    # Static wallpapers from current theme
+    if [ -d "$wall_dir" ]; then
+        find "${wall_dir}" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.webp" \) -print0 | \
+            xargs -0 basename -a | \
+            LC_ALL=C sort | \
+            while IFS= read -r A; do
+                printf '%s\000icon\037%s/%s\n' "$A" "$cacheDir" "$A"
+            done
+    fi
+    
+    # Animated wallpapers
+    if [ -d "$animated_dir" ]; then
+        find "${animated_dir}" -type f \( -iname "*.mp4" -o -iname "*.mkv" -o -iname "*.gif" \) -print0 | \
+            xargs -0 basename -a | \
+            LC_ALL=C sort | \
+            while IFS= read -r A; do
+                printf '[ANIMATED] %s\000icon\037%s/%s.jpg\n' "$A" "$cacheDir" "$A"
+            done
+    fi
+} | $rofi_command)
+
+# Set wallpaper based on selection
+if [ -n "$wall_selection" ]; then
+    # Check if it's an animated wallpaper
+    if echo "$wall_selection" | grep -E '^\[ANIMATED\]' >/dev/null; then
+        # Extract filename from [ANIMATED] prefix
+        filename=$(echo "$wall_selection" | sed 's/^\[ANIMATED\] //')
+        # Stop any existing animated wallpaper
+        pkill xwinwrap >/dev/null 2>&1
+        # Start new animated wallpaper
+        AnimatedWall --start "${animated_dir}/${filename}"
+    else
+        # Stop any existing animated wallpaper
+        pkill xwinwrap >/dev/null 2>&1
+        # Set static wallpaper
+        feh --no-fehbg --bg-fill "${wall_dir}/${wall_selection}"
+    fi
+fi

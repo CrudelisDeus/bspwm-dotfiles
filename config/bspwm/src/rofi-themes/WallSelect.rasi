@@ -83,4 +83,5 @@ element-text {
     cursor:                      inherit;
     background-color:            transparent;
     text-color:                  inherit;
+    font:                        "JetBrainsMono NF 8";
 }
