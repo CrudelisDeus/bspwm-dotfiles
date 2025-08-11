@@ -924,26 +924,26 @@ install_std_animated_wallpapers() {
         log_error "Source directory is missing or empty: $src"
     fi
 
-    printf "\n%s%sDotfiles installed successfully!%s\n" "$BLD" "$CGR" "$CNC"
+    printf "\n%s%sAnimated wallpaper installed successfully!%s\n" "$BLD" "$CGR" "$CNC"
 }
 
 # --- Main run --- #
-# based_update
-# initial_checks
-# welcome
-# add_gh0stzk_repo
-# add_chaotic_repo
+based_update
+initial_checks
+welcome
+add_gh0stzk_repo
+add_chaotic_repo
 
-# install_dependencies
-# install_gh0stzk_dependencies
-# install_chaotic_dependencies
-# install_aur_dependencies
-# clone_dotfiles
+install_dependencies
+install_gh0stzk_dependencies
+install_chaotic_dependencies
+install_aur_dependencies
+clone_dotfiles
 
-# backup_existing_config
-# install_dotfiles
-# configure_services
-# change_default_shell
-# install_displaymanager_dependencies
-# final_prompt
+backup_existing_config
+install_dotfiles
+configure_services
+change_default_shell
+install_displaymanager_dependencies
+final_prompt
 install_std_animated_wallpapers
