@@ -160,3 +160,6 @@ alias ll='eza --icons=always --color=always -la'
 #  ┴ ┴└─┘ ┴ └─┘  └─┘ ┴ ┴ ┴┴└─ ┴
 # $HOME/.local/bin/colorscript -r
 #disable-fzf-tab
+
+bindkey '^[[1;5D' backward-word   # Ctrl+Left
+bindkey '^[[1;5C' forward-word    # Ctrl+Right
