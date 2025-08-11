@@ -27,6 +27,20 @@
 
 https://github.com/user-attachments/assets/7e5627eb-b1e5-4354-bab1-319a2f35ef48
 
+<!-- WHAT'S NEW -->
+<h1 align="left">What's New</h1>
+<img src="./d-config/readme/img/selector_image.png" alt="selector_image">
+<br>
+<br>
+
+- **Enhanced Wallpaper Selector**: Added support for animated wallpapers (mp4, mkv, gif) alongside static wallpapers
+- **Improved Preview System**: Static wallpapers now display reliably without complex caching
+- **Simplified Dependencies**: Removed imagemagick dependency for better stability
+- **Random Animated Wallpapers**: Added function to randomly select animated wallpapers from `~/animated_wallpapers/`
+- **Better Integration**: Seamless switching between static and animated wallpapers
+
+</br>
+
 <!-- ORIGINAL AUTHOR -->
 <h1 align="left">Original author</h1>
 
