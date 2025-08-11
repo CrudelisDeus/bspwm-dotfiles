@@ -15,12 +15,6 @@ get_random_animated_wallpaper() {
     # search all files dir
     local video_files=($(find "$wallpaper_dir" -type f \( -name "*.mp4" -o -name "*.mkv" -o -name "*.gif"\) 2>/dev/null))
     
-    # Проверяем, найдены ли файлы
-    if [ ${#video_files[@]} -eq 0 ]; then
-        echo "$HOME/animated_wallpapers/1.mp4"  # fallback
-        return
-    fi
-    
     # pick random wallpaper
     local random_index=$((RANDOM % ${#video_files[@]}))
     echo "${video_files[$random_index]}"
