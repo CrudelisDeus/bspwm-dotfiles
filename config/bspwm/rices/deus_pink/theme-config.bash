@@ -106,4 +106,5 @@ geany_theme="z0mbi3-RosePineMoon"
 ENGINE="CustomAnimated"
 CUSTOM_DIR="/path/to/dir"
 CUSTOM_WALL="/path/to/image"
-CUSTOM_ANIMATED="$HOME/animated_wallpapers/pink.mp4"
+# Используем скрипт для случайного выбора анимированных обоев
+CUSTOM_ANIMATED="$(dirname "$0")/random-wallpaper.sh"
