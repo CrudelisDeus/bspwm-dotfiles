@@ -106,5 +106,30 @@ geany_theme="z0mbi3-RosePineMoon"
 ENGINE="CustomAnimated"
 CUSTOM_DIR="/path/to/dir"
 CUSTOM_WALL="/path/to/image"
-# Используем скрипт для случайного выбора анимированных обоев
-CUSTOM_ANIMATED="$(dirname "$0")/random-wallpaper.sh"
+
+# Функция для случайного выбора анимированных обоев
+get_random_animated_wallpaper() {
+    local wallpaper_dir="$HOME/animated_wallpapers"
+    
+    # Проверяем, существует ли директория
+    if [ ! -d "$wallpaper_dir" ]; then
+        echo "$HOME/animated_wallpapers/1.mp4"  # fallback
+        return
+    fi
+    
+    # Ищем все видео файлы в директории
+    local video_files=($(find "$wallpaper_dir" -type f \( -name "*.mp4" -o -name "*.mkv" -o -name "*.avi" -o -name "*.mov" -o -name "*.webm" \) 2>/dev/null))
+    
+    # Проверяем, найдены ли файлы
+    if [ ${#video_files[@]} -eq 0 ]; then
+        echo "$HOME/animated_wallpapers/1.mp4"  # fallback
+        return
+    fi
+    
+    # Выбираем случайный файл
+    local random_index=$((RANDOM % ${#video_files[@]}))
+    echo "${video_files[$random_index]}"
+}
+
+# Используем функцию для случайного выбора анимированных обоев
+CUSTOM_ANIMATED="$(get_random_animated_wallpaper)"
