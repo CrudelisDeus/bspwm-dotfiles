@@ -80,6 +80,10 @@ wall_selection=$({
 
 # Set wallpaper based on selection
 if [ -n "$wall_selection" ]; then
+    # Ensure config dir exists and define state file
+    mkdir -p "$HOME/.config/bspwm"
+    last_state_file="$HOME/.config/bspwm/last_wallpaper"
+
     # Check if it's an animated wallpaper
     if echo "$wall_selection" | grep -E '^\[ANIMATED\]' >/dev/null; then
         # Extract filename from [ANIMATED] prefix
@@ -88,10 +92,24 @@ if [ -n "$wall_selection" ]; then
         pkill xwinwrap >/dev/null 2>&1
         # Start new animated wallpaper
         AnimatedWall --start "${animated_dir}/${filename}"
+        # Persist selection
+        {
+            echo "TYPE=animated"
+            echo "FILE=${animated_dir}/${filename}"
+            echo "THEME=${current_rice}"
+            echo "UPDATED_AT=$(date +%s)"
+        } > "$last_state_file"
     else
         # Stop any existing animated wallpaper
         pkill xwinwrap >/dev/null 2>&1
         # Set static wallpaper
         feh --no-fehbg --bg-fill "${wall_dir}/${wall_selection}"
+        # Persist selection
+        {
+            echo "TYPE=static"
+            echo "FILE=${wall_dir}/${wall_selection}"
+            echo "THEME=${current_rice}"
+            echo "UPDATED_AT=$(date +%s)"
+        } > "$last_state_file"
     fi
 fi

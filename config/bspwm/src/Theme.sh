@@ -259,5 +259,47 @@ apply_dunst_config
 apply_eww_colors
 apply_menu_colors
 apply_geany_theme
-apply_wallpaper
+
+# Try to restore last manually selected wallpaper before applying engine
+RESTORED=false
+LAST_WALL_STATE="$HOME/.config/bspwm/last_wallpaper"
+if [ -f "$LAST_WALL_STATE" ]; then
+    # shellcheck disable=SC1090
+    . "$LAST_WALL_STATE"
+    # Variables expected from state file: TYPE, FILE, THEME
+    if [ -n "$FILE" ] && [ -r "$FILE" ]; then
+        THEME_MATCH=true
+        case "$FILE" in
+            $HOME/.config/bspwm/rices/*)
+                # If file is under rices path, check theme compatibility
+                case "$FILE" in
+                    *"/$RICE/"*) THEME_MATCH=true ;;
+                    *) THEME_MATCH=false ;;
+                esac
+                ;;
+        esac
+
+        if [ "$THEME_MATCH" = true ]; then
+            # Stop any running animated/slideshow processes before restoring
+            pkill xwinwrap >/dev/null 2>&1
+            if [ -f /tmp/wall_refresh.pid ]; then
+                kill "$(cat /tmp/wall_refresh.pid)" 2>/dev/null
+                rm -f /tmp/wall_refresh.pid
+            fi
+
+            case "$TYPE" in
+                animated)
+                    AnimatedWall --start "$FILE"
+                    RESTORED=true
+                    ;;
+                static|*)
+                    feh --no-fehbg --bg-fill "$FILE"
+                    RESTORED=true
+                    ;;
+            esac
+        fi
+    fi
+fi
+
+[ "$RESTORED" = true ] || apply_wallpaper
 apply_bar
