@@ -835,7 +835,7 @@ install_displaymanager_dependencies() {
     sleep 2
 
     # Detect missing packages
-    missing_pkgs="lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings"
+    missing_pkgs=""
     for pkg in $dependencies; do
         if ! is_installed "$pkg"; then
             missing_pkgs="$missing_pkgs $pkg"
@@ -875,6 +875,69 @@ install_displaymanager_dependencies() {
         fi
     else
         printf "\n%b\n" "${BLD}${CGR}All dependencies are already installed!${CNC}"
+    fi
+
+    # Configure LightDM greeter and background
+    printf "\n%b\n" "${BLD}${CYE}Configuring LightDM greeter...${CNC}"
+
+    # Paths
+    ldm_conf_src="$HOME/dotfiles/d-config/lightdm/lightdm-gtk-greeter.conf"
+    ldm_conf_dst="/etc/lightdm/lightdm-gtk-greeter.conf"
+    ldm_wall_script_src="$HOME/dotfiles/d-config/lightdm/greeter-setup.sh"
+    ldm_wall_script_dst="/usr/local/bin/lightdm-greeter-wall.sh"
+    ldm_conf_main="/etc/lightdm/lightdm.conf"
+
+    # Install greeter config
+    if [ -f "$ldm_conf_src" ]; then
+        if sudo install -Dm0644 "$ldm_conf_src" "$ldm_conf_dst" 2>> "$ERROR_LOG"; then
+            printf "%b\n" "${BLD}${CGR}Greeter config installed:${CNC} ${CBL}$ldm_conf_dst${CNC}"
+        else
+            log_error "Failed to install LightDM greeter config"
+        fi
+    else
+        log_error "LightDM greeter config not found at $ldm_conf_src"
+    fi
+
+    # Install greeter setup script (random rice wallpaper)
+    if [ -f "$ldm_wall_script_src" ]; then
+        if sudo install -Dm0755 "$ldm_wall_script_src" "$ldm_wall_script_dst" 2>> "$ERROR_LOG"; then
+            printf "%b\n" "${BLD}${CGR}Greeter wallpaper script installed:${CNC} ${CBL}$ldm_wall_script_dst${CNC}"
+        else
+            log_error "Failed to install greeter wallpaper script"
+        fi
+    else
+        log_error "Greeter wallpaper script not found at $ldm_wall_script_src"
+    fi
+
+    # Ensure greeter-session and greeter-setup-script in lightdm.conf
+    if [ -f "$ldm_conf_main" ]; then
+        # Create backup once
+        if [ ! -f "$ldm_conf_main.bak" ]; then
+            sudo cp "$ldm_conf_main" "$ldm_conf_main.bak" 2>> "$ERROR_LOG"
+        fi
+
+        # Ensure [Seat:*] section exists
+        if ! grep -q "^\[Seat:\*\]" "$ldm_conf_main"; then
+            printf "\n[Seat:*]\n" | sudo tee -a "$ldm_conf_main" >/dev/null
+        fi
+
+        # Set greeter-session
+        if grep -q "^greeter-session=" "$ldm_conf_main"; then
+            sudo sed -i "s/^greeter-session=.*/greeter-session=lightdm-gtk-greeter/" "$ldm_conf_main" 2>> "$ERROR_LOG"
+        else
+            sudo sed -i '/^\[Seat:\*\]/a greeter-session=lightdm-gtk-greeter' "$ldm_conf_main" 2>> "$ERROR_LOG"
+        fi
+
+        # Set greeter-setup-script
+        if grep -q "^greeter-setup-script=" "$ldm_conf_main"; then
+            sudo sed -i "s|^greeter-setup-script=.*|greeter-setup-script=$ldm_wall_script_dst|" "$ldm_conf_main" 2>> "$ERROR_LOG"
+        else
+            sudo sed -i "/^\[Seat:\*\]/a greeter-setup-script=$ldm_wall_script_dst" "$ldm_conf_main" 2>> "$ERROR_LOG"
+        fi
+
+        printf "%b\n" "${BLD}${CGR}LightDM configured to use GTK greeter and random rice wallpaper${CNC}"
+    else
+        log_error "LightDM main config not found at $ldm_conf_main"
     fi
 
     sudo systemctl enable lightdm.service
