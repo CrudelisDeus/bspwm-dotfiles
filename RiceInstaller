@@ -907,24 +907,33 @@ install_std_animated_wallpapers() {
     clear
     logo "Installing animated wallpapers"
 
-    # Create required directories
-    for dir in "$HOME/animated_wallpapers"; do
-        if [ ! -d "$dir" ]; then
-            mkdir -p "$dir" 2>> "$ERROR_LOG" && \
-            printf "%s%sCreated directory: %s%s%s\n" "$BLD" "$CGR" "$CBL" "$dir" "$CNC"
-        fi
-    done
-
     src="$HOME/dotfiles/d-config/animated_wallpapers"
     dst="$HOME/animated_wallpapers"
 
-    if [ -d "$src" ] && [ "$(ls -A "$src")" ]; then
-        sudo cp -a "$src/." "$dst/"
-    else
-        log_error "Source directory is missing or empty: $src"
+    # Ensure destination directory exists
+    if [ ! -d "$dst" ]; then
+        if mkdir -p "$dst" 2>> "$ERROR_LOG"; then
+            printf "%s%sCreated directory: %s%s%s\n" "$BLD" "$CGR" "$CBL" "$dst" "$CNC"
+        else
+            log_error "Failed to create destination directory: $dst"
+            return 1
+        fi
     fi
 
-    printf "\n%s%sAnimated wallpaper installed successfully!%s\n" "$BLD" "$CGR" "$CNC"
+    # Copy wallpapers if source exists and is not empty
+    if [ -d "$src" ] && [ "$(ls -A "$src" 2>/dev/null)" ]; then
+        if cp -a "$src/." "$dst/" 2>> "$ERROR_LOG"; then
+            printf "\n%s%sAnimated wallpapers installed successfully!%s\n" "$BLD" "$CGR" "$CNC"
+        else
+            log_error "Failed to copy animated wallpapers from $src to $dst"
+            printf "\n%s%sFailed to install animated wallpapers.%s\n" "$BLD" "$CRE" "$CNC"
+            return 1
+        fi
+    else
+        log_error "Source directory is missing or empty: $src"
+        printf "\n%s%sAnimated wallpapers source not found or empty.%s\n" "$BLD" "$CYE" "$CNC"
+        return 1
+    fi
 }
 
 # --- Main run --- #
@@ -945,5 +954,5 @@ install_dotfiles
 configure_services
 change_default_shell
 install_displaymanager_dependencies
-final_prompt
 install_std_animated_wallpapers
+final_prompt
