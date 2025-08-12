@@ -1,5 +1,5 @@
 #############################
-#		Cristina Theme		#
+#		Deus Pink Theme		#
 #############################
 # Copyright (C) 2021-2025 gh0stzk <z0mbi3.zk@protonmail.com>
 # https://github.com/gh0stzk/dotfiles
@@ -79,8 +79,8 @@ rofi_bg_alt="$accent_color"
 rofi_background_alt="${bg}E0"
 rofi_fg="$fg"
 rofi_selected="$magenta"
-rofi_active="$green"
-rofi_urgent="$red"
+rofi_active="#6C77BB"   # background of "Goodbye $USER" pill
+rofi_urgent="#6C77BB"   # background of power icon square
 
 # Screenlocker
 sl_bg="${bg}"
