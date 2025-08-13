@@ -936,6 +936,151 @@ install_std_animated_wallpapers() {
     fi
 }
 
+select_and_install_expand_build() {
+    clear
+    logo "Expand builds (optional)"
+
+    base_dir="$HOME/dotfiles/d-config/expand"
+
+    if [ ! -d "$base_dir" ]; then
+        printf "%b\n" "${BLD}${CYE}No expand builds directory found at ${CBL}${base_dir}${CNC} — skipping"
+        sleep 2
+        return 0
+    fi
+
+    # Collect available builds
+    build_count=0
+    printf "%b\n\n" "${BLD}${CBL}Available builds:${CNC}"
+    for d in "$base_dir"/*; do
+        [ -d "$d" ] || continue
+        build_count=$((build_count + 1))
+        printf " %s%d%s %s\n" "$BLD$CYE" "$build_count" "$CNC" "$(basename "$d")"
+    done
+
+    if [ "$build_count" -eq 0 ]; then
+        printf "\n%b\n" "${BLD}${CYE}No builds found — skipping${CNC}"
+        sleep 2
+        return 0
+    fi
+
+    printf "\n %b\n" "${BLD}${CYE}0${CNC} default (none) — skip"
+
+    while :; do
+        printf "\n%b" "${BLD}${CGR}Select a build to install (only one) [0-${build_count}]: ${CNC}"
+        read -r choice
+
+        case "$choice" in
+            ""|0)
+                printf "\n%b\n" "${BLD}${CYE}Skipping expand build installation${CNC}"
+                sleep 2
+                return 0 ;;
+            *[!0-9]*)
+                printf "%b\n" "${BLD}${CRE}Invalid option. Enter a number 0-${build_count}.${CNC}"
+                continue ;;
+            *)
+                if [ "$choice" -lt 0 ] || [ "$choice" -gt "$build_count" ]; then
+                    printf "%b\n" "${BLD}${CRE}Invalid option. Enter a number 0-${build_count}.${CNC}"
+                    continue
+                fi
+                break ;;
+        esac
+    done
+
+    # Resolve selected build directory
+    idx=0
+    selected_dir=""
+    for d in "$base_dir"/*; do
+        [ -d "$d" ] || continue
+        idx=$((idx + 1))
+        if [ "$idx" -eq "$choice" ]; then
+            selected_dir="$d"
+            break
+        fi
+    done
+
+    if [ -z "$selected_dir" ]; then
+        printf "%b\n" "${BLD}${CRE}Internal error: could not resolve selected build${CNC}"
+        return 1
+    fi
+
+    main_file="$selected_dir/main"
+    if [ ! -f "$main_file" ]; then
+        printf "%b\n" "${BLD}${CRE}Missing 'main' file in build: ${CBL}$(basename "$selected_dir")${CNC} — skipping"
+        sleep 2
+        return 0
+    fi
+
+    # Read package list (ignore comments/empty lines)
+    pkg_list=$(sed -e 's/[#;].*$//' -e 's/^[[:space:]]\+//' -e 's/[[:space:]]\+$//' "$main_file" | awk 'NF')
+
+    if [ -z "$pkg_list" ]; then
+        printf "%b\n" "${BLD}${CYE}No packages defined in ${CBL}$main_file${CNC} — nothing to install"
+        sleep 2
+        return 0
+    fi
+
+    printf "\n%b\n" "${BLD}${CBL}Selected build:${CNC} $(basename "$selected_dir")"
+    printf "%b\n\n" "${BLD}${CBL}Packages:${CNC} $(printf '%s' "$pkg_list" | tr '\n' ' ')"
+
+    # Determine missing packages
+    missing_pkgs=""
+    for pkg in $pkg_list; do
+        if ! is_installed "$pkg"; then
+            missing_pkgs="$missing_pkgs $pkg"
+        fi
+    done
+
+    if [ -z "$(printf "%s" "$missing_pkgs" | tr -s ' ')" ]; then
+        printf "%b\n" "${BLD}${CGR}All packages from build are already installed!${CNC}"
+        sleep 2
+        return 0
+    fi
+
+    printf "\n%b\n" "${BLD}${CYE}Installing build packages...${CNC}"
+
+    # Try installing via pacman first (official repos)
+    if ! sudo pacman -S --noconfirm $missing_pkgs 2>&1 | tee -a "$ERROR_LOG" >/dev/null; then
+        printf "%b\n" "${BLD}${CYE}Some packages may require AUR — trying paru...${CNC}"
+    fi
+
+    # Second pass: install any still-missing via paru if available
+    still_missing=""
+    for pkg in $missing_pkgs; do
+        if ! is_installed "$pkg"; then
+            still_missing="$still_missing $pkg"
+        fi
+    done
+
+    if [ -n "$(printf "%s" "$still_missing" | tr -s ' ')" ]; then
+        if command -v paru >/dev/null 2>&1; then
+            if paru -S --skipreview --noconfirm $still_missing >> "$ERROR_LOG" 2>&1; then
+                printf "%b\n" "${BLD}${CGR}AUR packages installed successfully!${CNC}"
+            else
+                log_error "Failed to install some AUR packages: $still_missing"
+                printf "%b\n" "${BLD}${CRE}Failed to install some AUR packages.${CNC}"
+            fi
+        else
+            printf "%b\n" "${BLD}${CYE}paru not found; skipping AUR installation for:${CNC} ${still_missing}"
+        fi
+    fi
+
+    # Final report
+    failed=""
+    for pkg in $pkg_list; do
+        if ! is_installed "$pkg"; then
+            failed="$failed $pkg"
+        fi
+    done
+
+    if [ -z "$(printf "%s" "$failed" | tr -s ' ')" ]; then
+        printf "\n%b\n" "${BLD}${CGR}Build installed successfully!${CNC}"
+    else
+        printf "\n%b\n" "${BLD}${CRE}Some packages failed to install:${CNC} ${failed}"
+    fi
+
+    sleep 2
+}
+
 # --- Main run --- #
 based_update
 initial_checks
@@ -955,4 +1100,5 @@ configure_services
 change_default_shell
 install_displaymanager_dependencies
 install_std_animated_wallpapers
+select_and_install_expand_build
 final_prompt
