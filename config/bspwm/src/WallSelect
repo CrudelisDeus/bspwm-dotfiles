@@ -18,11 +18,14 @@ thumb_for() {
   command -v ffmpeg >/dev/null 2>&1 || { printf %s "$in"; return; }
 
   ffmpeg -loglevel error -y -i "$in" -vframes 1 \
-    -vf "scale=500:500:force_original_aspect_ratio=decrease,format=rgba,scale=500:500:flags=bicubic:out_color_matrix=bt709:eval=frame" \
+    -vf "scale=500:500:force_original_aspect_ratio=decrease,
+         pad=500:500:(ow-iw)/2:(oh-ih)/2:color=0x00000000,
+         format=rgba" \
     -c:v png -pix_fmt rgba "$out" >/dev/null 2>&1 || true
 
   printf %s "$out"
 }
+
 
 # --- наполняем меню ---
 menu_stream() {
