@@ -218,7 +218,18 @@ apply_geany_theme(){
 apply_wallpaper () {
 	case $ENGINE in
 		"Theme")
-			feh -z --no-fehbg --bg-fill "${HOME}"/.config/bspwm/rices/"${RICE}"/walls ;;
+			wall_dir="${HOME}/.config/bspwm/rices/${RICE}/walls"
+			for ext in webp png jpg jpeg mp4 mkv gif; do
+				if [ -f "$wall_dir/logo.$ext" ]; then
+					pkill xwinwrap >/dev/null 2>&1 || true
+					case "$ext" in
+						mp4|mkv|gif) AnimatedWall --start "$wall_dir/logo.$ext" ;;
+						*)           feh --no-fehbg --bg-fill "$wall_dir/logo.$ext" ;;
+					esac
+					return
+				fi
+			done
+			feh -z --no-fehbg --bg-fill "$wall_dir" ;;
 
 		"CustomDir")
 			feh -z --no-fehbg --bg-fill "$CUSTOM_DIR" ;;
