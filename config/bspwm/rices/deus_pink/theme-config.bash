@@ -103,33 +103,7 @@ geany_theme="z0mbi3-RosePineMoon"
 # - CustomImage	(Sets a specific image as wallpaper)
 # - CustomAnimated (Set an animated wallpaper. "mp4, mkv, gif")
 # - Slideshow (Change randomly every 15 minutes your wallpaper from Walls rice directory)
-ENGINE="CustomAnimated"
+ENGINE="Theme"
 CUSTOM_DIR="/path/to/dir"
 CUSTOM_WALL="/path/to/image"
-
-
-get_random_animated_wallpaper() {
-    local wallpaper_dir="$HOME/.config/animated_wallpapers"
-    
-    # test exist dir
-    if [ ! -d "$wallpaper_dir" ]; then
-        echo "$HOME/.config/animated_wallpapers/1.mp4"  # fallback
-        return
-    fi
-    
-    # search all files dir
-    local video_files=($(find "$wallpaper_dir" -type f \( -name "*.mp4" -o -name "*.mkv" -o -name "*.gif"\) 2>/dev/null))
-    
-
-    if [ ${#video_files[@]} -eq 0 ]; then
-        echo "$HOME/.config/animated_wallpapers/1.mp4"  # fallback
-        return
-    fi
-    
-    # pick random wallpaper
-    local random_index=$((RANDOM % ${#video_files[@]}))
-    echo "${video_files[$random_index]}"
-}
-
-
-CUSTOM_ANIMATED="$(get_random_animated_wallpaper)"
+CUSTOM_ANIMATED="$HOME/.config/bspwm/src/assets/animated_wall.mp4"

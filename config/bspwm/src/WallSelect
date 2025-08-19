@@ -13,6 +13,8 @@
 #   ✔ Lockfile system for safe concurrent operations
 #   ✔ Rofi integration with theme support
 #   ✔ Lightweight (~2ms overhead on cache hits)
+#   ✔ Support for video files (mp4, mkv, gif)
+#   ✔ Exclude lockscreen directory
 #
 # Dependencies:
 #   → Core: bspwm, xrandr, xdpyinfo, rofi, xxhsum (xxhash)
@@ -57,7 +59,19 @@ process_func_def='process_image() {
     (
         flock -x 9
         if [ ! -f "$cache_file" ] || [ ! -f "$md5_file" ] || [ "$current_md5" != "$(cat "$md5_file" 2>/dev/null)" ]; then
-            magick "$imagen" -resize 500x500^ -gravity center -extent 500x500 "$cache_file"
+            # Check if it's a video file
+            if [[ "$imagen" =~ \.(mp4|mkv|gif)$ ]]; then
+                # For video files, create a thumbnail using ffmpeg
+                if command -v ffmpeg >/dev/null 2>&1; then
+                    ffmpeg -i "$imagen" -vframes 1 -vf "scale=500:500:force_original_aspect_ratio=increase,crop=500:500" "$cache_file" -y >/dev/null 2>&1
+                else
+                    # Fallback: copy a placeholder or create empty file
+                    touch "$cache_file"
+                fi
+            else
+                # For image files, use imagemagick
+                magick "$imagen" -resize 500x500^ -gravity center -extent 500x500 "$cache_file"
+            fi
             echo "$current_md5" > "$md5_file"
         fi
         rm -f "$lock_file"
@@ -69,8 +83,8 @@ export process_func_def cacheDir wall_dir
 # Clean old locks before starting
 rm -f "${cacheDir}"/.lock_* 2>/dev/null || true
 
-# Process files in parallel
-find "$wall_dir" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.webp" \) -print0 | \
+# Process files in parallel (images and videos, excluding lockscreen)
+find "$wall_dir" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.webp" -o -iname "*.mp4" -o -iname "*.mkv" -o -iname "*.gif" \) ! -path "*/lockscreen/*" -print0 | \
     xargs -0 -P "$PARALLEL_JOBS" -I {} sh -c "$process_func_def; process_image \"{}\""
 
 # Clean orphaned cache files and their locks
@@ -88,13 +102,33 @@ done
 # Clean any remaining lock files
 rm -f "${cacheDir}"/.lock_* 2>/dev/null || true
 
-# Launch rofi
-wall_selection=$(find "${wall_dir}" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.webp" \) -print0 |
+# Launch rofi (display only filename without extension, excluding lockscreen)
+wall_selection=$(find "${wall_dir}" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.webp" -o -iname "*.mp4" -o -iname "*.mkv" -o -iname "*.gif" \) ! -path "*/lockscreen/*" -print0 |
     xargs -0 basename -a |
+    sed 's/\.[^.]*$//' |
     LC_ALL=C sort |
     while IFS= read -r A; do
         printf '%s\000icon\037%s/%s\n' "$A" "$cacheDir" "$A"
     done | $rofi_command)
 
-# Set wallpaper
-[ -n "$wall_selection" ] && feh --no-fehbg --bg-fill "${wall_dir}/${wall_selection}"
+# Set wallpaper (need to find the actual file with extension)
+if [ -n "$wall_selection" ]; then
+    # Find the actual file with any supported extension
+    actual_file=$(find "${wall_dir}" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.webp" -o -iname "*.mp4" -o -iname "*.mkv" -o -iname "*.gif" \) ! -path "*/lockscreen/*" -name "${wall_selection}.*" | head -n1)
+    
+    if [ -n "$actual_file" ]; then
+        # Check if it's a video file
+        if [[ "$actual_file" =~ \.(mp4|mkv|gif)$ ]]; then
+            # For video files, use AnimatedWall if available
+            if command -v AnimatedWall >/dev/null 2>&1; then
+                AnimatedWall --start "$actual_file"
+            else
+                # Fallback: use feh with first frame
+                feh --no-fehbg --bg-fill "$actual_file"
+            fi
+        else
+            # For image files, use feh
+            feh --no-fehbg --bg-fill "$actual_file"
+        fi
+    fi
+fi
