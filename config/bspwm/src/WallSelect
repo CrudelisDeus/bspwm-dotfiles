@@ -26,9 +26,18 @@
 # =============================================================
 
 # Set some variables
+# Ensure HOME is set correctly
+[ -z "$HOME" ] && export HOME="$USERPROFILE"
+
 read -r current_rice <"$HOME"/.config/bspwm/.rice
 wall_dir="$HOME/.config/bspwm/rices/$current_rice/walls"
 cacheDir="$HOME/.cache/$USER/$current_rice"
+
+# Check if wall_dir exists
+if [ ! -d "$wall_dir" ]; then
+    echo "ERROR: Wall directory does not exist: $wall_dir" >&2
+    exit 1
+fi
 
 # Create cache dir if not exists
 [ -d "$cacheDir" ] || mkdir -p "$cacheDir"
