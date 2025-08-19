@@ -609,6 +609,11 @@ install_dotfiles() {
             continue
         fi
 
+        # Do not copy system LightDM config into user's ~/.config
+        if [ "$dir_name" = "lightdm" ]; then
+            continue
+        fi
+
         copy_files "$config_dir" "$HOME/.config/"
         #sleep 0.3
     done
@@ -888,6 +893,59 @@ install_displaymanager_dependencies() {
     #sleep 3
 }
 
+configure_lightdm() {
+    clear
+    logo "Configuring LightDM"
+
+    # Ensure greeter session is set
+    if [ -f /etc/lightdm/lightdm.conf ]; then
+        if grep -q "^\s*greeter-session=" /etc/lightdm/lightdm.conf; then
+            sudo sed -i 's/^\s*#\?greeter-session=.*/greeter-session=lightdm-gtk-greeter/' /etc/lightdm/lightdm.conf
+        else
+            printf "\n[Seat:*]\ngreeter-session=lightdm-gtk-greeter\n" | sudo tee -a /etc/lightdm/lightdm.conf >/dev/null
+        fi
+    else
+        printf "[Seat:*]\ngreeter-session=lightdm-gtk-greeter\n" | sudo tee /etc/lightdm/lightdm.conf >/dev/null
+    fi
+
+    # Install greeter config from repo to system path
+    if [ -f "$HOME/dotfiles/config/lightdm/lightdm-gtk-greeter.conf" ]; then
+        sudo install -Dm644 "$HOME/dotfiles/config/lightdm/lightdm-gtk-greeter.conf" /etc/lightdm/lightdm-gtk-greeter.conf
+    fi
+
+    # Prepare background for greeter
+    sudo install -d -m 755 /var/cache/lightdm
+
+    if [ -f "$HOME/.config/bspwm/.rice" ]; then
+        read -r RICE < "$HOME"/.config/bspwm/.rice
+        wall_dir="$HOME/.config/bspwm/rices/${RICE}/walls"
+
+        selected_image=""
+        for ext in webp png jpg jpeg; do
+            if [ -f "$wall_dir/lockscreen.$ext" ]; then
+                selected_image="$wall_dir/lockscreen.$ext"
+                break
+            fi
+        done
+
+        if [ -z "$selected_image" ] && [ -d "$wall_dir" ]; then
+            selected_image=$(find "$wall_dir" -maxdepth 1 -type f \
+                \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) | shuf -n 1)
+        fi
+
+        if [ -n "$selected_image" ]; then
+            if command -v magick >/dev/null 2>&1; then
+                sudo magick "$selected_image" /var/cache/lightdm/greeter-wallpaper.webp >/dev/null 2>&1 || sudo cp -f "$selected_image" /var/cache/lightdm/greeter-wallpaper.webp
+            else
+                sudo cp -f "$selected_image" /var/cache/lightdm/greeter-wallpaper.webp
+            fi
+            sudo chmod 644 /var/cache/lightdm/greeter-wallpaper.webp
+        fi
+    fi
+
+    printf "%b\n" "${BLD}${CGR}LightDM configured!${CNC}"
+}
+
 # --- Main run --- #
 based_update
 initial_checks
@@ -906,4 +964,5 @@ install_dotfiles
 configure_services
 change_default_shell
 install_displaymanager_dependencies
+configure_lightdm
 final_prompt

@@ -254,6 +254,38 @@ apply_wallpaper () {
 	esac
 }
 
+# Update LightDM greeter background based on current theme
+apply_lightdm_greeter_background() {
+	wall_dir="${HOME}/.config/bspwm/rices/${RICE}/walls"
+
+	selected_image=""
+	for ext in webp png jpg jpeg; do
+		if [ -f "${wall_dir}/lockscreen.${ext}" ]; then
+			selected_image="${wall_dir}/lockscreen.${ext}"
+			break
+		fi
+	done
+
+	if [ -z "${selected_image}" ] && [ -d "${wall_dir}" ]; then
+		selected_image=$(find "${wall_dir}" -maxdepth 1 -type f \
+			\( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) | shuf -n 1)
+	fi
+
+	[ -z "${selected_image}" ] && return
+
+	# Non-interactive sudo to avoid blocking the theme switch
+	if sudo -n true 2>/dev/null; then
+		sudo install -d -m 755 /var/cache/lightdm
+		if command -v magick >/dev/null 2>&1; then
+			sudo magick "${selected_image}" /var/cache/lightdm/greeter-wallpaper.webp >/dev/null 2>&1 || \
+				sudo cp -f "${selected_image}" /var/cache/lightdm/greeter-wallpaper.webp
+		else
+			sudo cp -f "${selected_image}" /var/cache/lightdm/greeter-wallpaper.webp
+		fi
+		sudo chmod 644 /var/cache/lightdm/greeter-wallpaper.webp
+	fi
+}
+
 # Launch bars
 apply_bar() {
 	. "$HOME"/.config/bspwm/rices/"$RICE"/Bar.bash
@@ -271,4 +303,5 @@ apply_eww_colors
 apply_menu_colors
 apply_geany_theme
 apply_wallpaper
+apply_lightdm_greeter_background
 apply_bar
