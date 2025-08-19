@@ -13,22 +13,14 @@ is_video() {
 }
 
 thumb_for() {
-  in="$1"; base="$(basename "$in")"; out="$cache_dir/$base.png"
+  in="$1"; base="$(basename "$in")"; out="$cache_dir/$base.jpg"
   [ -f "$out" ] && { printf %s "$out"; return; }
   command -v ffmpeg >/dev/null 2>&1 || { printf %s "$in"; return; }
-
-  # 1 кадр -> вписываем в 500x500 с сохранением пропорций
-  # прозрачные поля через color=black@0, выход RGBA
   ffmpeg -loglevel error -y -i "$in" -vframes 1 \
-    -vf "scale=500:500:force_original_aspect_ratio=decrease,\
-pad=500:500:(ow-iw)/2:(oh-ih)/2:color=black@0,\
-format=rgba" \
-    -c:v png -pix_fmt rgba "$out" >/dev/null 2>&1 || true
-
+    -vf "scale=500:500:force_original_aspect_ratio=decrease,pad=500:500:(ow-iw)/2:(oh-ih)/2" \
+    "$out" >/dev/null 2>&1 || true
   printf %s "$out"
 }
-
-
 
 # --- наполняем меню ---
 menu_stream() {
