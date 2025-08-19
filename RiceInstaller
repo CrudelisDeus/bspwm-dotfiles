@@ -448,7 +448,7 @@ install_aur_dependencies() {
 clone_dotfiles() {
     clear
     logo "Downloading dotfiles"
-    repo_url="https://github.com/gh0stzk/dotfiles"
+    repo_url="https://github.com/CrudelisDeus/bspwm-dotfiles.git"
     repo_dir="$HOME/dotfiles"
     timestamp=$(date +"%Y%m%d-%H%M%S")
     #sleep 3
