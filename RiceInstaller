@@ -31,22 +31,13 @@ ERROR_LOG="$HOME/RiceError.log"
 logo() {
     text="$1"
     printf "%b" "
-               %%%
-        %%%%%//%%%%%
-      %%************%%%
-  (%%//############*****%%
- %%%%**###&&&&&&&&&###**//
- %%(**##&&&#########&&&##**
- %%(**##*****#####*****##**%%%
- %%(**##     *****     ##**
-   //##   @@**   @@   ##//
-     ##     **###     ##
-     #######     #####//
-       ###**&&&&&**###
-       &&&         &&&
-       &&&////   &&
-          &&//@@@**
-            ..***
+______█████████
+______█▄█████▄█
+______█▼▼▼▼▼█
+_____██▌_______██
+______█▲▲▲▲▲█
+______█████████
+______ ██_____██
 
    ${BLD}${CRE}[ ${CYE}${text} ${CRE}]${CNC}\n\n"
 }
@@ -833,7 +824,72 @@ final_prompt() {
     done
 }
 
+based_update() {
+    clear
+    logo "Update system"
+    sudo pacman -Syu --noconfirm
+}
+
+install_displaymanager_dependencies() {
+    clear
+    logo "Installing needed packages repository..."
+    sleep 2
+
+    # List of dependencies
+    dependencies="lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings"
+
+    printf "%b\n\n" "${BLD}${CBL}Checking for required packages...${CNC}"
+    sleep 2
+
+    # Detect missing packages
+    missing_pkgs="lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings"
+    for pkg in $dependencies; do
+        if ! is_installed "$pkg"; then
+            missing_pkgs="$missing_pkgs $pkg"
+            printf "%b\n" " ${BLD}${CYE}$pkg ${CRE}not installed${CNC}"
+        else
+            printf "%b\n" "${BLD}${CGR}$pkg ${CBL}already installed${CNC}"
+        fi
+    done
+
+    # Batch installation if needed
+    if [ -n "$(printf "%s" "$missing_pkgs" | tr -s ' ')" ]; then
+        count=$(printf "%s" "$missing_pkgs" | wc -w)
+        printf "\n%b\n\n" "${BLD}${CYE}Installing $count packages, please wait...${CNC}"
+
+        if sudo pacman -S --noconfirm $missing_pkgs 2>&1 | tee -a "$ERROR_LOG" >/dev/null; then
+            # Verify complete installation
+            failed_pkgs=""
+            for pkg in $missing_pkgs; do
+                if ! is_installed "$pkg"; then
+                    failed_pkgs="$failed_pkgs $pkg"
+                    log_error "Failed to install: $pkg"
+                fi
+            done
+
+            # Show final results
+            if [ -z "$(printf "%s" "$failed_pkgs" | tr -s ' ')" ]; then
+                printf "%b\n\n" "${BLD}${CGR}All packages installed successfully!${CNC}"
+            else
+                fail_count=$(printf "%s" "$failed_pkgs" | wc -w)
+                printf "%b\n" "${BLD}${CRE}Failed to install $fail_count packages:${CNC}"
+                printf "%b\n\n" "  ${BLD}${CYE}$(printf "%s" "$failed_pkgs")${CNC}"
+            fi
+        else
+            log_error "Critical error during batch installation"
+            printf "%b\n" "${BLD}${CRE}Installation failed! Check log for details${CNC}"
+            return 1
+        fi
+    else
+        printf "\n%b\n" "${BLD}${CGR}All dependencies are already installed!${CNC}"
+    fi
+
+    sudo systemctl enable lightdm.service
+    sleep 3
+}
+
 # --- Main run --- #
+based_update
 initial_checks
 welcome
 add_gh0stzk_repo
@@ -849,4 +905,5 @@ backup_existing_config
 install_dotfiles
 configure_services
 change_default_shell
+install_displaymanager_dependencies
 final_prompt
