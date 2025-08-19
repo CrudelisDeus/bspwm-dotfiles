@@ -229,10 +229,23 @@ apply_wallpaper () {
 					return
 				fi
 			done
-			feh -z --no-fehbg --bg-fill "$wall_dir" ;;
+			# Exclude lockscreen.* when picking a random background
+			selected_image=$(find "$wall_dir" -maxdepth 1 -type f \
+				\( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' -o -iname '*.mp4' -o -iname '*.mkv' -o -iname '*.gif' \) \
+				-not -iname 'lockscreen.*' | shuf -n 1)
+			[ -z "$selected_image" ] && return
+			case "$selected_image" in
+				*.mp4|*.mkv|*.gif) AnimatedWall --start "$selected_image" ;;
+				*)                 feh --no-fehbg --bg-fill "$selected_image" ;;
+			esac ;;
 
 		"CustomDir")
-			feh -z --no-fehbg --bg-fill "$CUSTOM_DIR" ;;
+			# Exclude lockscreen.* when picking from custom dir via feh shuffle
+			wall_dir="$CUSTOM_DIR"
+			img=$(find "$wall_dir" -maxdepth 1 -type f \
+				\( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) \
+				-not -iname 'lockscreen.*' | shuf -n 1)
+			[ -n "$img" ] && feh --no-fehbg --bg-fill "$img" ;;
 
 		"CustomImage")
 			feh --no-fehbg --bg-fill "$CUSTOM_WALL" ;;
@@ -243,14 +256,22 @@ apply_wallpaper () {
         "Slideshow")
             (
                 while true; do
-                    feh -z --no-fehbg --bg-fill "${HOME}"/.config/bspwm/rices/"${RICE}"/walls
+                    wall_dir="${HOME}"/.config/bspwm/rices/"${RICE}"/walls
+                    img=$(find "$wall_dir" -maxdepth 1 -type f \
+                        \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) \
+                        -not -iname 'lockscreen.*' | shuf -n 1)
+                    [ -n "$img" ] && feh --no-fehbg --bg-fill "$img"
                     sleep 900  # 900 seconds = 15 minutes
                 done
             ) &
             echo $! > /tmp/wall_refresh.pid  ;;
 
 		*)
-			feh -z --no-fehbg --bg-fill "${HOME}"/.config/bspwm/rices/"${RICE}"/walls ;;
+			wall_dir="${HOME}"/.config/bspwm/rices/"${RICE}"/walls
+			img=$(find "$wall_dir" -maxdepth 1 -type f \
+				\( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) \
+				-not -iname 'lockscreen.*' | shuf -n 1)
+			[ -n "$img" ] && feh --no-fehbg --bg-fill "$img" ;;
 	esac
 }
 
