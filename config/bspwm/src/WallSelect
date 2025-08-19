@@ -1,77 +1,47 @@
 #!/bin/sh
-# WallSelect: static + animated (mp4/mkv/gif) из текущей темы
-# Зависимости: rofi, feh, ffmpeg (для превью видео), (опц.) imagemagick
+# WallSelect: статика + mp4/mkv/gif из текущей темы (без lockscreen.*)
 
-set -eu
-
-# Текущая тема и директории
+# --- настройки ---
 read -r current_rice <"$HOME/.config/bspwm/.rice"
 wall_dir="$HOME/.config/bspwm/rices/$current_rice/walls"
 cache_dir="$HOME/.cache/$USER/wallselect"
+rofi_cmd="rofi -dmenu -theme $HOME/.config/bspwm/src/rofi-themes/WallSelect.rasi"
 mkdir -p "$cache_dir"
 
-# Rofi команда/тема
-rofi_cmd="rofi -dmenu -theme $HOME/.config/bspwm/src/rofi-themes/WallSelect.rasi"
-
-# Быстрая проверка расширений
 is_video() {
-  case "${1##*.}" in
-    mp4|MP4|mkv|MKV|gif|GIF) return 0 ;;
-    *) return 1 ;;
-  esac
+  case "${1##*.}" in mp4|MP4|mkv|MKV|gif|GIF) return 0;; *) return 1;; esac
 }
 
-# Мини-превью для видео/гиф (1 кадр, 500x500)
 thumb_for() {
-  in="$1"
-  base="$(basename "$in")"
-  out="$cache_dir/$base.jpg"
+  in="$1"; base="$(basename "$in")"; out="$cache_dir/$base.jpg"
   [ -f "$out" ] && { printf %s "$out"; return; }
   command -v ffmpeg >/dev/null 2>&1 || { printf %s "$in"; return; }
   ffmpeg -loglevel error -y -i "$in" -vframes 1 \
     -vf "scale=500:500:force_original_aspect_ratio=decrease,pad=500:500:(ow-iw)/2:(oh-ih)/2" \
     "$out" >/dev/null 2>&1 || true
-  printf %s "${out:-$in}"
+  printf %s "$out"
 }
 
-# Сформировать список для rofi (исключая lockscreen.*)
-# (иконка = сам файл для изображений, или превью для видео)
+# --- наполняем меню ---
 menu_stream() {
   find "$wall_dir" -maxdepth 1 -type f \
     \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' -o -iname '*.mp4' -o -iname '*.mkv' -o -iname '*.gif' \) \
-    -not -iname 'lockscreen.*' \
-    -printf '%f\0' \
-  | xargs -0 -I{} sh -c '
-      name="$1"
-      full="'"$wall_dir"'/$name"
-      if '"$(printf 'false;')"' ; then :; fi
-      if '"$(printf 'true;')"' ; then :; fi
-      # Выбор иконки
-      case "$name" in
-        *.mp4|*.MP4|*.mkv|*.MKV|*.gif|*.GIF)
-          icon="$(thumb_for "$full")"
-          ;;
-        *)
-          icon="$full"
-          ;;
-      esac
-      printf "%s\000icon\037%s\n" "$name" "$icon"
-  ' sh {}
+    -not -iname 'lockscreen.*' -print0 \
+  | sort -z \
+  | while IFS= read -r -d '' file; do
+      name="$(basename "$file")"
+      if is_video "$name"; then icon="$(thumb_for "$file")"; else icon="$file"; fi
+      printf '%s\000icon\037%s\n' "$name" "$icon"
+    done
 }
 
-# Показать меню и получить выбор
 selection="$(menu_stream | $rofi_cmd || true)"
+[ -z "$selection" ] && exit 0
 
-[ -z "${selection:-}" ] && exit 0
-
-full_path="$wall_dir/$selection"
-
-# Сброс старого анимированного фона (если был)
+full="$wall_dir/$selection"
 pkill xwinwrap >/dev/null 2>&1 || true
-
-# Установка фона
 if is_video "$selection"; then
-  AnimatedWall --start "$full_path"
+  AnimatedWall --start "$full"
 else
-  feh --no-fehbg --bg-fill "$full_path"
+  feh --no-fehbg --bg-fill "$full"
 fi
