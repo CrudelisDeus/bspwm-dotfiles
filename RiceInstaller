@@ -124,7 +124,7 @@ add_gh0stzk_repo() {
     clear
     logo "Add gh0stzk custom repo"
     repo_name="gh0stzk-dotfiles"
-    sleep 2
+    #sleep 2
 
     # Mensaje de instalación del repositorio
     printf "%b\n" "${BLD}${CYE}Installing ${CBL}${repo_name}${CYE} repository...${CNC}"
@@ -147,7 +147,7 @@ add_gh0stzk_repo() {
         fi
     else
         printf "\n%b\n" "${BLD}${CYE}The repository already exists and is configured${CNC}"
-        sleep 3
+        #sleep 3
         return 0
     fi
 }
@@ -157,7 +157,7 @@ add_chaotic_repo() {
     logo "Add chaotic-aur repository"
     repo_name="chaotic-aur"
     key_id="3056513887B78AEB"
-    sleep 2
+    #sleep 2
 
     # Mensaje de configuración del repositorio
     printf "%b\n" "${BLD}${CYE}Installing ${CBL}${repo_name}${CYE} repository...${CNC}"
@@ -165,7 +165,7 @@ add_chaotic_repo() {
     # Verificar si ya existe la sección en pacman.conf
     if grep -q "\[${repo_name}\]" /etc/pacman.conf; then
         printf "%b\n" "\n${BLD}${CYE}Repository already exists in pacman.conf${CNC}"
-        sleep 3
+        #sleep 3
         return 0
     fi
 
@@ -209,13 +209,13 @@ add_chaotic_repo() {
     fi
 
     printf "%b\n" "\n${BLD}${CBL}${repo_name} ${CGR}Repository configured successfully!${CNC}"
-    sleep 3
+    #sleep 3
 }
 
 install_dependencies() {
     clear
     logo "Installing needed packages from official repositories..."
-    sleep 2
+    #sleep 2
 
     # Ensure reflector is installed and update mirrorlist
     is_reflector
@@ -227,7 +227,7 @@ install_dependencies() {
     dependencies="alacritty base-devel bat brightnessctl bspwm clipcat dunst eza feh fzf thunar tumbler gvfs-mtp firefox geany git imagemagick jq jgmenu kitty libwebp maim mpc mpd mpv neovim ncmpcpp npm pamixer pacman-contrib papirus-icon-theme picom playerctl polybar lxsession-gtk3 python-gobject redshift rofi rustup sxhkd tmux xclip xdg-user-dirs xdo xdotool xsettingsd xorg-xdpyinfo xorg-xkill xorg-xprop xorg-xrandr xorg-xsetroot xorg-xwininfo yazi zsh zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting ttf-inconsolata ttf-jetbrains-mono ttf-jetbrains-mono-nerd ttf-terminus-nerd ttf-ubuntu-mono-nerd webp-pixbuf-loader"
 
     printf "\n%b\n\n" "${BLD}${CBL}Checking for required packages...${CNC}"
-    sleep 2
+    #sleep 2
 
     # Detect missing packages
     missing_pkgs=""
@@ -272,19 +272,19 @@ install_dependencies() {
         printf "%b\n" "\n${BLD}${CGR}All dependencies are already installed!${CNC}"
     fi
 
-    sleep 3
+    #sleep 3
 }
 
 install_gh0stzk_dependencies() {
     clear
     logo "Installing needed packages from gh0stzk repository..."
-    sleep 2
+    #sleep 2
 
     # List of dependencies
     gh0stzk_dependencies="gh0stzk-gtk-themes gh0stzk-cursor-qogirr gh0stzk-icons-beautyline gh0stzk-icons-candy gh0stzk-icons-catppuccin-mocha gh0stzk-icons-dracula gh0stzk-icons-glassy gh0stzk-icons-gruvbox-plus-dark gh0stzk-icons-hack gh0stzk-icons-luv gh0stzk-icons-sweet-rainbow gh0stzk-icons-tokyo-night gh0stzk-icons-vimix-white gh0stzk-icons-zafiro gh0stzk-icons-zafiro-purple"
 
     printf "%b\n\n" "${BLD}${CBL}Checking for required packages...${CNC}"
-    sleep 2
+    #sleep 2
 
     # Detect missing packages
     missing_gh0stzk_pkgs=""
@@ -329,19 +329,19 @@ install_gh0stzk_dependencies() {
         printf "\n%b\n" "${BLD}${CGR}All dependencies are already installed!${CNC}"
     fi
 
-    sleep 3
+    #sleep 3
 }
 
 install_chaotic_dependencies() {
     clear
     logo "Installing needed packages from chaotic repository..."
-    sleep 2
+    #sleep 2
 
     # List of dependencies
     chaotic_dependencies="paru eww-git i3lock-color simple-mtpfs fzf-tab-git"
 
     printf "%b\n\n" "${BLD}${CBL}Checking for required packages...${CNC}"
-    sleep 2
+    #sleep 2
 
     # Detect missing packages
     missing_chaotic_pkgs=""
@@ -386,19 +386,19 @@ install_chaotic_dependencies() {
         printf "\n%b\n" "${BLD}${CGR}All dependencies are already installed!${CNC}"
     fi
 
-    sleep 3
+    #sleep 3
 }
 
 install_aur_dependencies() {
     clear
     logo "Installing AUR dependencies..."
-    sleep 2
+    #sleep 2
 
     # AUR Package List
     aur_apps="xqp xwinwrap-0.9-bin"
 
     printf "%b\n\n" "${BLD}${CBL}Checking for required AUR packages...${CNC}"
-    sleep 2
+    #sleep 2
 
     # Detect missing AUR packages
     missing_aur=""
@@ -427,7 +427,7 @@ install_aur_dependencies() {
                 aur_failed="$aur_failed $pkg"
                 printf "%b\n" "  ${BLD}${CRE}Installation failed!${CNC}"
             fi
-            sleep 0.5
+            #sleep 0.5
         done
 
         # Show final summary
@@ -442,7 +442,7 @@ install_aur_dependencies() {
         printf "\n%b\n\n" "${BLD}${CGR}All AUR dependencies are already installed!${CNC}"
     fi
 
-    sleep 3
+    #sleep 3
 }
 
 clone_dotfiles() {
@@ -451,7 +451,7 @@ clone_dotfiles() {
     repo_url="https://github.com/gh0stzk/dotfiles"
     repo_dir="$HOME/dotfiles"
     timestamp=$(date +"%Y%m%d-%H%M%S")
-    sleep 3
+    #sleep 3
 
     # Handle existing repository
     if [ -d "$repo_dir" ]; then
@@ -471,14 +471,14 @@ clone_dotfiles() {
         return 1
     fi
 
-    sleep 3
+    #sleep 3
 }
 
 backup_existing_config() {
     clear
     logo "Backup files"
     date=$(date +%Y%m%d-%H%M%S)
-    sleep 2
+    #sleep 2
 
     printf "%b" "My dotfiles come with a lightweight, simple, and functional Neovim configuration.\nBut if you already have a custom, super pro Neovim configuration and don't want to try mine, just type 'n'\n"
 
@@ -506,7 +506,7 @@ backup_existing_config() {
 
     mkdir -p "$backup_folder" 2>> "$ERROR_LOG"
     printf "\n%b\n\n" "${BLD}${CYE}Backup directory: ${CBL}$backup_folder${CNC}"
-    sleep 2
+    #sleep 2
 
     backup_item() {
         type=$1
@@ -528,10 +528,10 @@ backup_existing_config() {
                 log_error "Error backup: $base_name"
                 printf " %s%s %sbackup failed%s\n" "$BLD$CRE" "$base_name" "$CYE" "$CNC"
             fi
-            sleep 0.5
+            #sleep 0.5
         else
             printf " %s%s %snot found%s\n" "$BLD$CYE" "$base_name" "$CBL" "$CNC"
-            sleep 0.3
+            #sleep 0.3
         fi
     }
 
@@ -549,7 +549,7 @@ backup_existing_config() {
         if [ ! -d "$HOME/.mozilla" ]; then
             printf "%b\n" "${BLD}${CYE}Creating Firefox profile...${CNC}"
             timeout 1s firefox --headless --display=0 >/dev/null 2>&1
-            sleep 1
+            #sleep 1
         fi
 
         firefox_profile=$(find "$HOME/.mozilla/firefox" -maxdepth 1 -type d -name '*.default-release' 2>/dev/null | head -1)
@@ -568,14 +568,14 @@ backup_existing_config() {
     done
 
     printf "\n%b\n\n" "${BLD}${CGR}Backup completed!${CNC}"
-    sleep 3
+    #sleep 3
 }
 
 install_dotfiles() {
     clear
     logo "Installing dotfiles.."
     printf "%s%s Copying files to respective directories...%s\n\n" "$BLD" "$CBL" "$CNC"
-    sleep 2
+    #sleep 2
 
     # Create required directories
     for dir in "$HOME/.config" "$HOME/.local/bin" "$HOME/.local/share"; do
@@ -610,7 +610,7 @@ install_dotfiles() {
         fi
 
         copy_files "$config_dir" "$HOME/.config/"
-        sleep 0.3
+        #sleep 0.3
     done
 
     # Copy miscellaneous components
@@ -620,7 +620,7 @@ install_dotfiles() {
         [ "$item" = "bin" ] && target_path="$HOME/.local/"
 
         copy_files "$source_path" "$target_path"
-        sleep 0.3
+        #sleep 0.3
     done
 
     # Handle Firefox theme
@@ -699,14 +699,14 @@ install_dotfiles() {
     fi
 
     printf "\n%s%sDotfiles installed successfully!%s\n" "$BLD" "$CGR" "$CNC"
-    sleep 3
+    #sleep 3
 }
 
 configure_services() {
     clear
     logo "Configuring Services"
     picom_config="$HOME/.config/bspwm/src/config/picom.conf"
-    sleep 2
+    #sleep 2
 
     # MPD Service Management
     if systemctl is-enabled --quiet mpd.service; then
@@ -772,14 +772,14 @@ configure_services() {
         fi
     fi
 
-    sleep 3
+    #sleep 3
 }
 
 change_default_shell() {
     clear
     logo "Changing default shell to zsh"
     zsh_path=$(command -v zsh)
-    sleep 3
+    #sleep 3
 
     if [ -z "$zsh_path" ]; then
         log_error "Zsh binary not found"
@@ -799,7 +799,7 @@ change_default_shell() {
         printf "%b\n\n" "${BLD}${CGR}Zsh is already your default shell!${CNC}"
     fi
 
-    sleep 3
+    #sleep 3
 }
 
 final_prompt() {
@@ -814,7 +814,7 @@ final_prompt() {
         read -r yn
         case "$yn" in
             [Yy]) printf "\n%b\n" "${BLD}${CGR}Initiating reboot...${CNC}"
-                sleep 1
+                #sleep 1
                 sudo reboot
                 break ;;
             [Nn]|"") printf "\n%b\n\n" "${BLD}${CYE}You really need to reboot bro!!${CNC}"
@@ -833,13 +833,13 @@ based_update() {
 install_displaymanager_dependencies() {
     clear
     logo "Installing needed packages repository..."
-    sleep 2
+    #sleep 2
 
     # List of dependencies
     dependencies="lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings"
 
     printf "%b\n\n" "${BLD}${CBL}Checking for required packages...${CNC}"
-    sleep 2
+    #sleep 2
 
     # Detect missing packages
     missing_pkgs="lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings"
@@ -885,7 +885,7 @@ install_displaymanager_dependencies() {
     fi
 
     sudo systemctl enable lightdm.service
-    sleep 3
+    #sleep 3
 }
 
 # --- Main run --- #
