@@ -40,6 +40,12 @@ Legacy support - compatibility with the original repository’s classic themes.
 
 ![](./readme/img/lockscreen.png)
 
-The display manager was integrated into the initial installer with a unique configuration and extended features. Instead of using the default login theme, a custom non-standard theme is applied. Additionally, support for setting a separate background image on the login screen has been added.
+Custom LightDM integration - added directly into the initial installer.
+
+Unique configuration - not a default setup, but tailored with extended features.
+
+Non-standard theme - a distinctive login theme instead of the stock one.
+
+Background support - ability to use a separate background image for the login screen
 
 <!-- -------------------------------------------------------- -->
