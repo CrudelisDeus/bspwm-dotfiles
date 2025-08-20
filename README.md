@@ -46,6 +46,6 @@ Unique configuration - not a default setup, but tailored with extended features.
 
 Non-standard theme - a distinctive login theme instead of the stock one.
 
-Background support - ability to use a separate background image for the login screen
+Background support - ability to use a separate background image for the login screen.
 
 <!-- -------------------------------------------------------- -->
