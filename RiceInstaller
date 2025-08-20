@@ -597,6 +597,10 @@ install_dotfiles() {
             continue
         fi
 
+        if [ "$dir_name" = "readme" ]; then
+            continue
+        fi
+
         copy_files "$config_dir" "$HOME/.config/"
         #sleep 0.3
     done

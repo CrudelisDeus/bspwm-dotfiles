@@ -1,6 +1,6 @@
 ## About
 
-<img src="./readme/img/logo.svg" alt="logo" align="right" height="244.5px">
+<img src="./config/readme/img/logo.svg" alt="logo" align="right" height="244.5px">
 
 <br>
 
@@ -20,7 +20,7 @@
 ## Theme
 
 <div align="center">
-    <img src="./readme/img/deus_pink.svg" alt="deus_pink" height="220px">
+    <img src="./config/readme/img/deus_pink.svg" alt="deus_pink" height="220px">
     <h3> DEUS pink </h3>
 </div>
 
@@ -38,7 +38,7 @@ Legacy support - compatibility with the original repository’s classic themes.
 
 ### Display manager support
 
-![](./readme/img/lockscreen.png)
+![](./config/readme/img/lockscreen.png)
 
 Custom LightDM integration - added directly into the initial installer.
 
