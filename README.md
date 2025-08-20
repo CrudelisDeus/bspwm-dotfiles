@@ -1,6 +1,6 @@
 ## About
 
-<img src="./readme/img/logo.svg" alt="logo" align="right" height="220px">
+<img src="./readme/img/logo.svg" alt="logo" align="right" height="244.5px">
 
 <br>
 
