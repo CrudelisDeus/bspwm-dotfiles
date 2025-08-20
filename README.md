@@ -24,7 +24,7 @@
     <h3> DEUS pink </h3>
 </div>
 
-https://github.com/user-attachments/assets/78ee8aa9-d0bf-4150-8719-513f02e49b7a
+https://github.com/user-attachments/assets/955efdf5-6147-410b-b1b0-8f0b631dcfce
 
 <!-- -------------------------------------------------------- -->
 
