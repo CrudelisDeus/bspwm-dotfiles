@@ -48,4 +48,24 @@ Non-standard theme - a distinctive login theme instead of the stock one.
 
 Background support - ability to use a separate background image for the login screen.
 
+### Wallpaper selection
+
+![](./config/readme/img/wallpaper_select.png)
+
+The wallpaper system has been redesigned with a more flexible logic.
+
+Quick access — the main wallpaper picker is now available with the key combination `Super + Alt + W`.
+
+Logo priority — if the `walls` folder of the current theme contains an image or video named logo, it will always be used as the default background on each login.
+
+Lockscreen separation — any file named lockscreen will be excluded from desktop wallpaper selection and used exclusively as the LightDM background.
+
+Randomized choice — without a logo, a random wallpaper will be chosen each time you log in. If there’s no lockscreen, LightDM will also use a random wallpaper.
+
+A detailed explanation of the system’s operation will be presented below:
+
+![](./config/readme/img/pre-login.svg)
+
+![](./config/readme/img/post-login.svg)
+
 <!-- -------------------------------------------------------- -->
