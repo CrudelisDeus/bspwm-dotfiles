@@ -31,5 +31,4 @@ case $chosen in
     "󰜉") systemctl reboot ;;
     "󰍁") bspc quit ;;
     "") systemctl suspend ;;
-    "󰗽") bspc quit ;;
 esac
