@@ -207,7 +207,7 @@ install_dependencies() {
     sudo pacman -Syy
 
     # List of dependencies
-    dependencies="alacritty base-devel bat brightnessctl bspwm clipcat dunst eza feh fzf thunar tumbler gvfs-mtp firefox geany git imagemagick jq jgmenu kitty libwebp maim mpc mpd mpv neovim ncmpcpp npm pamixer pacman-contrib papirus-icon-theme picom playerctl polybar lxsession-gtk3 python-gobject redshift rofi rustup sxhkd tmux xclip xdg-user-dirs xdo xdotool xsettingsd xorg-xdpyinfo xorg-xkill xorg-xprop xorg-xrandr xorg-xsetroot xorg-xwininfo yazi zsh zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting ttf-inconsolata ttf-jetbrains-mono ttf-jetbrains-mono-nerd ttf-terminus-nerd ttf-ubuntu-mono-nerd webp-pixbuf-loader"
+    dependencies="alacritty base-devel bat brightnessctl bspwm clipcat dunst eza feh fzf thunar tumbler gvfs-mtp firefox geany git imagemagick jq jgmenu kitty libwebp maim mpv neovim npm pamixer pacman-contrib papirus-icon-theme picom playerctl polybar lxsession-gtk3 python-gobject redshift rofi rustup sxhkd tmux xclip xdg-user-dirs xdo xdotool xsettingsd xorg-xdpyinfo xorg-xkill xorg-xprop xorg-xrandr xorg-xsetroot xorg-xwininfo yazi zsh zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting ttf-inconsolata ttf-jetbrains-mono ttf-jetbrains-mono-nerd ttf-terminus-nerd ttf-ubuntu-mono-nerd webp-pixbuf-loader"
 
     printf "\n%b\n\n" "${BLD}${CBL}Checking for required packages...${CNC}"
     #sleep 2
@@ -700,25 +700,7 @@ configure_services() {
     picom_config="$HOME/.config/bspwm/src/config/picom.conf"
     #sleep 2
 
-    # MPD Service Management
-    if systemctl is-enabled --quiet mpd.service; then
-        printf "%b\n" "${BLD}${CYE}Disabling global MPD service...${CNC}"
-        if sudo systemctl disable --now mpd.service 2>&1 | tee -a "$ERROR_LOG" >/dev/null; then
-            printf "%b\n" "${BLD}${CGR}Global MPD service disabled successfully${CNC}"
-        else
-            log_error "Failed to disable global MPD service"
-            printf "%b\n\n" "${BLD}${CRE}Failed to disable global MPD service${CNC}"
-        fi
-    fi
-
-    # User-level MPD Service
-    printf "%b\n" "${BLD}${CYE}Enabling user MPD service...${CNC}"
-    if systemctl --user enable --now mpd.service >> "$ERROR_LOG" 2>&1; then
-        printf "%b\n\n" "${BLD}${CGR}User MPD service activated successfully${CNC}"
-    else
-        log_error "Failed to enable user MPD service"
-        printf "%b\n\n" "${BLD}${CRE}Failed to activate user MPD service${CNC}"
-    fi
+    # MPD/NCMPCPP are optional; skipping service enablement for minimal setup
 
     # User-level ArchUpdates
     printf "%b\n" "${BLD}${CYE}Enabling user ArchUpdates service...${CNC}"

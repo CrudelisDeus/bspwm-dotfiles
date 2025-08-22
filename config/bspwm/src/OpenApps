@@ -57,7 +57,7 @@ case "$1" in
 		Term --nvim
 		;;
 	--music)
-		Term --music
+		: # removed
 		;;
 	--fetch)
 		Term --fetch
@@ -92,7 +92,7 @@ case "$1" in
 		eww -c "$WIDGET_DIR" open --toggle launchermenu
 		;;
 	--player)
-		eww -c "$WIDGET_DIR" open --toggle music
+		: # removed
 		;;
 	--calendar)
 		eww -c "$WIDGET_DIR" open --toggle date

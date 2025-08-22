@@ -25,11 +25,7 @@
 (defpoll volume_icon :interval "1s" "scripts/Volume --icon")
 (defpoll volume_value :interval "1s" "scripts/Volume --vol")
 
-;; Music vars
-(defpoll SONG 	:interval "1s" "MediaControl --title")
-(defpoll ARTIST :interval "1s" "MediaControl --artist")
-(defpoll COVER 	:interval "3s" "MediaControl --cover")
-(defpoll STATUS :interval "1s" "MediaControl --status")
+;; Music vars (removed)
 
 ;; Network
 (defpoll WIFIICON :interval "15s" "scripts/Network --icon")
@@ -302,7 +298,6 @@
 		 :spacing 15
 		 :halign "end"
 		 ;;:valign "center"
-(music)
 (system)))
 
 
