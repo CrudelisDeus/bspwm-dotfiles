@@ -9,7 +9,7 @@
 # =============================================================
 
 # Set the player
-[ -n "$(pgrep spotify)" ] && Control="spotify" || Control="MPD"
+[ -n "$(pgrep spotify)" ] && Control="spotify" || Control=""
 
 # Here the cover image will be saved.
 Cover=/tmp/cover.png
@@ -88,6 +88,15 @@ case $Control in
                 loop=$(mpc status | sed -n '3s/.*repeat: \([^ ]*\).*/\1/p' | sed 's/.*/\u&/')
                 echo "${loop:-Off}"
                 ;;
+        esac
+        ;;
+    "")
+        # no player available
+        case $1 in
+            --next|--previous|--toggle|--stop) exit 0 ;;
+            --title|--artist|--status|--position|--positions|--length|--lengths|--shuffle|--loop) echo "" ;;
+            --player) echo "" ;;
+            --cover|nccover) echo "" ;;
         esac
         ;;
     *)
