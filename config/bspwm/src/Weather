@@ -20,6 +20,8 @@
 # =============================================================
 
 # ===== Configuration =====
+# Set to "1" to completely avoid network access and output static values
+OFFLINE_MODE="1"
 KEY="8b05d62206f459e1d298cbe5844d7d87"
 CITY="Misto Kyyiv"  # Go to https://openweathermap.org/find to find your city/town
 UNITS="metric" # Available "metric" "imperial"
@@ -28,6 +30,10 @@ CACHE_FILE="$CACHE_DIR/weather_data"
 CACHE_TIMEOUT=900  # 15 minutes in seconds
 
 get_weather_data() {
+    if [ "$OFFLINE_MODE" = "1" ]; then
+        echo '{"main":{"temp":0,"feels_like":0},"weather":[{"description":"offline","icon":"01d"}]}'
+        return
+    fi
     encoded_city=$(echo "$CITY" | sed 's/ /%20/g')
     url="https://api.openweathermap.org/data/2.5/weather?q=$encoded_city&appid=$KEY&units=$UNITS"
 
@@ -117,9 +123,13 @@ case "$1" in
         echo "$CITY"
         ;;
     "wmodule")
-        icon=$(get_weather_icon "$W_ICON")
-        hex=$(get_weather_hex "$W_ICON")
-        printf "%%{F%s}%s%%{F-} %s°\n" "$hex" "$icon" "$W_TEMP"
+        if [ "$OFFLINE_MODE" = "1" ]; then
+            printf "%%{F#adadff}%%{F-} 0°\n"
+        else
+            icon=$(get_weather_icon "$W_ICON")
+            hex=$(get_weather_hex "$W_ICON")
+            printf "%%{F%s}%s%%{F-} %s°\n" "$hex" "$icon" "$W_TEMP"
+        fi
         ;;
     *)
         echo "Opción no válida"
