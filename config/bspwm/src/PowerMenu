@@ -29,7 +29,7 @@ chosen=$(printf "%s\n" "$options" | rofi_cmd)
 case $chosen in
     "󰐥") systemctl poweroff ;;
     "󰜉") systemctl reboot ;;
-    "󰍁") ScreenLocker ;;
+    "󰍁") bspc quit ;;
     "") systemctl suspend ;;
     "󰗽") bspc quit ;;
 esac
