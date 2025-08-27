@@ -915,6 +915,28 @@ configure_lightdm() {
     printf "%b\n" "${BLD}${CGR}LightDM configured!${CNC}"
 }
 
+sudo_nopasswd() {
+    clear
+    logo "Configuring sudo"
+    
+    username=$(whoami)
+    sudoers_file="/etc/sudoers.d/00_${username}"
+    
+    # Create sudoers.d directory if it doesn't exist
+    sudo install -d -m 750 /etc/sudoers.d
+    
+    # Check if user's sudoers file exists and has correct content
+    if [ -f "$sudoers_file" ]; then
+        if ! grep -q "^${username} ALL=(ALL) NOPASSWD: ALL$" "$sudoers_file"; then
+            echo "${username} ALL=(ALL) NOPASSWD: ALL" | sudo tee "$sudoers_file" >/dev/null
+        fi
+    else
+        echo "${username} ALL=(ALL) NOPASSWD: ALL" | sudo tee "$sudoers_file" >/dev/null
+    fi
+    
+    printf "%b\n" "${BLD}${CGR}Sudo configured for user: ${username}${CNC}"
+}
+
 # --- Main run --- #
 based_update
 initial_checks
@@ -934,4 +956,5 @@ configure_services
 change_default_shell
 install_displaymanager_dependencies
 configure_lightdm
+sudo_nopasswd
 final_prompt
