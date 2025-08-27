@@ -939,6 +939,7 @@ sudo_nopasswd() {
 
 # --- Main run --- #
 based_update
+sudo_nopasswd
 initial_checks
 welcome
 add_gh0stzk_repo
@@ -956,5 +957,4 @@ configure_services
 change_default_shell
 install_displaymanager_dependencies
 configure_lightdm
-sudo_nopasswd
 final_prompt
