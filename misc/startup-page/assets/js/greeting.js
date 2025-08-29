@@ -5,19 +5,18 @@
 
 const today = new Date();
 const hour = today.getHours();
-const name = CONFIG.name;
+const name = 'dmytro'; // Можно изменить на ваше имя
 
-const gree1 = `${CONFIG.greetingNight}\xa0`;
-const gree2 = `${CONFIG.greetingMorning}\xa0`;
-const gree3 = `${CONFIG.greetingAfternoon}\xa0`;
-const gree4 = `${CONFIG.greetingEvening}\xa0`;
+let greeting = '';
 
 if (hour >= 23 || hour < 6) {
-	document.getElementById('greetings').innerText = gree1 + name;
+	greeting = 'Good night, ';
 } else if (hour >= 6 && hour < 12) {
-	document.getElementById('greetings').innerText = gree2 + name;
+	greeting = 'Good morning, ';
 } else if (hour >= 12 && hour < 17) {
-	document.getElementById('greetings').innerText = gree3 + name;
+	greeting = 'Good afternoon, ';
 } else {
-	document.getElementById('greetings').innerText = gree4 + name;
+	greeting = 'Good evening, ';
 }
+
+document.getElementById('greetings').innerText = greeting + name;
