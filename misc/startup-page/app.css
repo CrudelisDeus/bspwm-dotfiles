@@ -12,32 +12,36 @@
 
 html,
 body {
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
 }
 
 body {
-  min-height: 100vh;
+  width: 100vw;
+  height: 100vh;
   background: var(--bg);
-  display: grid;
-  place-items: center;
+  overflow: hidden;
 }
 
 .stack {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  gap: 3vh;
+  padding: 30px;
+  height: 100%;
   text-align: center;
-  gap: 1.2rem;
-  width: fit-content;
 }
 
 /* --- ЛОГОТИП --- */
 .logo {
+  display: block;
+  width: auto;
+  height: 40vh;
   max-width: 100%;
-  width: 100%;
-  height: auto;
-  filter: brightness(1.2) contrast(1.1);
   object-fit: contain;
+  filter: brightness(1.2) contrast(1.1);
 }
 
 #time {
