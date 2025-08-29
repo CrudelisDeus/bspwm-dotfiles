@@ -1,30 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<title>Home</title>
-		<link rel="shortcut icon" type="image/svg" href="assets/icons/favicon.svg" />
-		<link rel="stylesheet" href="app.css" />
-	</head>
 
-	<body class="darktheme">
-		<div class="container">
-			<!-- Logo -->
-			<div class="logoBlock">
-				<img src="assets/icons/favicon.svg" alt="Logo" class="logo" />
-			</div>
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Home</title>
+	<link rel="stylesheet" href="app.css" />
+</head>
 
-			<!-- Clock and Greetings -->
-			<div class="timeBlock">
-				<div class="clock">
-					<div id="time"></div>
-				</div>
-				<div id="greetings"></div>
-			</div>
-		</div>
+<body>
+	<main class="stack">
+		<img src="assets/icons/favicon.svg" alt="Logo" class="logo lock-to-time" />
+		<div id="time"></div>
+		<div id="greetings" class="lock-to-time"></div>
+	</main>
 
-		<!-- Scripts -->
-		<script src="assets/js/time.js"></script>
-		<script src="assets/js/greeting.js"></script>
-	</body>
+	<!-- <script src="time.js"></script>
+	<script src="greeting.js"></script> -->
+	<script src="assets/js/greeting.js"></script>
+	<script src="assets/js/time.js"></script>
+
+</body>
+
 </html>
