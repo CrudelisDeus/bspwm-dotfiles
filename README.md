@@ -69,3 +69,22 @@ A detailed explanation of the system’s operation will be presented below:
 ![](./config/readme/img/post-login.svg)
 
 <!-- -------------------------------------------------------- -->
+
+### Update 1.0
+
+#### Removed Components
+
+**Music Player & Server**
+- Removed the music player with server-side functionality
+- Eliminated the need for port opening
+- Simplified the system architecture by removing unnecessary network services
+
+**Weather Widget**
+- Removed the weather API integration from the polybar
+- Eliminated external API calls for weather information
+- Added default temperature value of 0°C as fallback
+
+#### System Improvements
+- Reduced system complexity by removing non-essential components
+- Improved privacy by eliminating external API dependencies
+- Enhanced system stability by removing network-dependent services
