@@ -8,7 +8,6 @@ Exit,^checkout(exit),system-shutdown
 
 ^tag(wm)
 Rice Editor,RiceEditor,preferences-desktop-theme
-Keybinds,OpenApps --KeyHelp,preferences-desktop-keyboard-shortcuts
 Restart WM,bspc wm -r,system-reboot
 Soft Reload,SoftReload,system-reboot
 Logout,bspc quit,system-log-out
