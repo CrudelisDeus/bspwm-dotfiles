@@ -49,7 +49,7 @@ body {
   font-weight: 900;
   font-size: 12vh;
   line-height: 1;
-  text-shadow: 0 0 10px rgba(184, 191, 229, 0.3);
+  /* text-shadow: 0 0 10px rgba(184, 191, 229, 0.3); */
 }
 
 #greetings {
