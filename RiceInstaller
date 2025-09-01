@@ -947,14 +947,14 @@ app_installer() {
     
     printf "%b\n" "${BLD}${CYE}Installing additional applications...${CNC}"
     
-    # Execute deustaller.sh from .config directory
-    if [ -f "$HOME/.config/app_installer/deustaller.sh" ]; then
+    # Execute deustaller.sh from dotfiles directory
+    if [ -f "$HOME/dotfiles/config/app_installer/deustaller.sh" ]; then
         printf "%b\n" "${BLD}${CBL}Running deustaller.sh...${CNC}"
-        chmod +x "$HOME/.config/app_installer/deustaller.sh"
-        "$HOME/.config/app_installer/deustaller.sh"
+        chmod +x "$HOME/dotfiles/config/app_installer/deustaller.sh"
+        "$HOME/dotfiles/config/app_installer/deustaller.sh"
         printf "%b\n" "${BLD}${CGR}Applications installation completed!${CNC}"
     else
-        printf "%b\n" "${BLD}${CRE}deustaller.sh not found in ~/.config/app_installer/${CNC}"
+        printf "%b\n" "${BLD}${CRE}deustaller.sh not found in dotfiles/config/app_installer/${CNC}"
     fi
     
     # sleep 2
