@@ -465,28 +465,29 @@ backup_existing_config() {
 
     printf "%b" "My dotfiles come with a lightweight, simple, and functional Neovim configuration.\nBut if you already have a custom, super pro Neovim configuration and don't want to try mine, just type 'n'\n"
 
-    while :; do
-        printf "%b" "${BLD}${CYE}Do you want to use my Neovim setup? ${CNC}[y/N]: "
-        read -r try_nvim
-        case "$try_nvim" in
-            [Yy]) try_nvim="y"; break ;;
-            [Nn]) try_nvim="n"; break ;;
-            *) printf " %b%bError:%b write 'y' or 'n'\n" "${BLD}" "${CRE}" "${CNC}" ;;
-        esac
-    done
+    # while :; do
+    #     printf "%b" "${BLD}${CYE}Do you want to use my Neovim setup? ${CNC}[y/N]: "
+    #     read -r try_nvim
+    #     case "$try_nvim" in
+    #         [Yy]) try_nvim="y"; break ;;
+    #         [Nn]) try_nvim="n"; break ;;
+    #         *) printf " %b%bError:%b write 'y' or 'n'\n" "${BLD}" "${CRE}" "${CNC}" ;;
+    #     esac
+    # done
+    try_nvim="y"
 
     printf "\nMy dotfiles come with a beautiful, minimalist Firefox theme, but if you don't want to try it, just type 'n'.\n"
 
-    while :; do
-        printf "%b" "${BLD}${CYE}Do you want to use my Firefox theme? ${CNC}[y/N]: "
-        read -r try_firefox
-        case "$try_firefox" in
-            [Yy]) try_firefox="y"; break ;;
-            [Nn]) try_firefox="n"; break ;;
-            *) printf " %b%bError:%b write 'y' or 'n'\n" "${BLD}" "${CRE}" "${CNC}" ;;
-        esac
-    done
-
+    # while :; do
+    #     printf "%b" "${BLD}${CYE}Do you want to use my Firefox theme? ${CNC}[y/N]: "
+    #     read -r try_firefox
+    #     case "$try_firefox" in
+    #         [Yy]) try_firefox="y"; break ;;
+    #         [Nn]) try_firefox="n"; break ;;
+    #         *) printf " %b%bError:%b write 'y' or 'n'\n" "${BLD}" "${CRE}" "${CNC}" ;;
+    #     esac
+    # done
+    try_firefox="y"
     mkdir -p "$backup_folder" 2>> "$ERROR_LOG"
     printf "\n%b\n\n" "${BLD}${CYE}Backup directory: ${CBL}$backup_folder${CNC}"
     #sleep 2
