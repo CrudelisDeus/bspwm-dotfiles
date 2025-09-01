@@ -8,8 +8,8 @@
 #
 
 # Show help
-alt + F1
-	OpenApps --KeyHelp
+#alt + F1
+#	OpenApps --KeyHelp
 
 ############################
 # ----- Applications ----- #
@@ -36,12 +36,14 @@ super + {b,e,f}
 	OpenApps --{browser,editor,filemanager}
 
 # Terminal apps (yazi, nvim, ncmpcpp)
-super + {y,v,m}
-	OpenApps --{yazi,nvim,music}
+super + {y,v}
+	OpenApps --{yazi,nvim}
+# super + {y,v,m}
+# 	OpenApps --{yazi,nvim,music}
 
 # Media apps (Pavucontrol, Telegram, Whatsapp)
-super + {p,t,w}
-	OpenApps --{soundcontrol,telegram,whats}
+# super + {p,t,w}
+# 	OpenApps --{soundcontrol,telegram,whats}
 
 # Rice Editor App
 super + r
@@ -101,7 +103,9 @@ super + alt + o
 
 # Power off, Reboot, Log out, Lockscreen, kill an app
 ctrl + super + alt + {p,r,q,l,k,s}
-	{systemctl poweroff, systemctl reboot,bspc quit,ScreenLocker,xkill,SoftReload}
+	{systemctl poweroff, systemctl reboot,bspc quit,bspc quit,xkill,SoftReload}
+# ctrl + super + alt + {p,r,q,l,k,s}
+# 	{systemctl poweroff, systemctl reboot,bspc quit,ScreenLocker,xkill,SoftReload}
 
 # Hide/Show Bar (Polybar and/or eww)
 super + alt + {h,u}

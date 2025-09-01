@@ -26,7 +26,7 @@ FR France|fr
 DE Deutschland|de
 RU Россия|ru
 IT Italia|it
-PT Brasil|br"
+UK Україна|uk"
 
 # Show rofi menu
 show_rofi_menu() {
