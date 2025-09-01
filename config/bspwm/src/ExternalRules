@@ -34,18 +34,18 @@ case "$class" in
     Viewnior)
         result "state=floating focus=on center=on"
         ;;
-    TelegramDesktop)
-        result "desktop=^4 follow=on"
-        ;;
+    # TelegramDesktop)
+    #     result "desktop=^4 follow=on"
+    #     ;;
     pavucontrol)
         result "state=floating center=on"
         ;;
     Thunar)
         result "desktop=^2 follow=on"
         ;;
-    firefox|Navigator)
-        result "desktop=^3 follow=on"
-        ;;
+    # firefox|Navigator)
+    #     result "desktop=^3 follow=on"
+    #     ;;
 esac
 
 case "$instance" in
