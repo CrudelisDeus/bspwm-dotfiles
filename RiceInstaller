@@ -602,6 +602,10 @@ install_dotfiles() {
             continue
         fi
 
+        if [ "$dir_name" = "app_installer" ]; then
+            continue
+        fi
+
         copy_files "$config_dir" "$HOME/.config/"
         #sleep 0.3
     done
@@ -937,6 +941,24 @@ sudo_nopasswd() {
     
     printf "%b\n" "${BLD}${CGR}Sudo configured for user: ${username}${CNC}"
 }
+app_installer() {
+    clear
+    logo "Installing applications"
+    
+    printf "%b\n" "${BLD}${CYE}Installing additional applications...${CNC}"
+    
+    # Execute deustaller.sh from .config directory
+    if [ -f "$HOME/.config/app_installer/deustaller.sh" ]; then
+        printf "%b\n" "${BLD}${CBL}Running deustaller.sh...${CNC}"
+        chmod +x "$HOME/.config/app_installer/deustaller.sh"
+        "$HOME/.config/app_installer/deustaller.sh"
+        printf "%b\n" "${BLD}${CGR}Applications installation completed!${CNC}"
+    else
+        printf "%b\n" "${BLD}${CRE}deustaller.sh not found in ~/.config/app_installer/${CNC}"
+    fi
+    
+    # sleep 2
+}
 
 # --- Main run --- #
 initial_checks
@@ -960,4 +982,5 @@ configure_services
 change_default_shell
 install_displaymanager_dependencies
 configure_lightdm
+app_installer
 final_prompt
