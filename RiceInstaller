@@ -939,10 +939,12 @@ sudo_nopasswd() {
 }
 
 # --- Main run --- #
-based_update
-sudo_nopasswd
 initial_checks
 welcome
+# ---------------- #
+based_update
+sudo_nopasswd
+# ---------------- #
 add_gh0stzk_repo
 add_chaotic_repo
 
