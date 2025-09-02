@@ -182,6 +182,50 @@ read_packages_from_file() {
     done < "$file"
 }
 
+# Execute additional preset scripts: any files matching script*.sh in the preset directory
+run_preset_scripts() {
+    # PRESET_DIR must be set by select_preset_dir
+    [ -z "$PRESET_DIR" ] && return 0
+
+    shopt -s nullglob
+    local scripts=("$PRESET_DIR"/script*.sh)
+    shopt -u nullglob
+
+    if [ ${#scripts[@]} -eq 0 ]; then
+        # Nothing to run
+        return 0
+    fi
+
+    step "Running preset scripts"
+    for sc in "${scripts[@]}"; do
+        local bn
+        bn="${sc##*/}"
+
+        # Per-script logs inside the preset directory
+        local s_full s_err
+        s_full="$PRESET_DIR/${bn%.sh}-full.log"
+        s_err="$PRESET_DIR/${bn%.sh}-error.log"
+
+        log_info "Executing $bn"
+
+        chmod +x "$sc" 2>/dev/null
+
+        # Run and pipe stdout/stderr to dedicated logs, while also mirroring to global FULLOG
+        {
+            echo "==== $(ts) :: start $bn ===="
+            bash -c "$sc"
+            echo "==== $(ts) :: end $bn ===="
+        } >> "$s_full" 2>> "$s_err"
+
+        # Also append short status to the main logs
+        if [ ${PIPESTATUS[1]:-0} -eq 0 ]; then
+            log_info "$bn finished successfully"
+        else
+            log_info "$bn finished with errors (see $(realpath --relative-to="$PWD" "$s_err" 2>/dev/null || echo "$s_err"))"
+        fi
+    done
+}
+
 # Scan for di-* directories, display a menu without the di- prefix, and set PRESET_DIR/NAME
 select_preset_dir() {
     local script_dir
@@ -284,6 +328,9 @@ main() {
         log_info "Starting installation..."
         install_packages "${to_install[@]}"
     fi
+
+    # Execute preset scripts after package installation
+    run_preset_scripts
 
     step "Done"
 }
