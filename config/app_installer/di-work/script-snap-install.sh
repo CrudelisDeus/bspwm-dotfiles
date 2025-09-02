@@ -1,4 +1,5 @@
 cd ~
 git clone https://aur.archlinux.org/snapd.git
 cd snapd
-makepkg -si
+# Build and install without any interactive prompts
+makepkg -si --noconfirm --noedit --noprogressbar
