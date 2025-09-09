@@ -4,3 +4,4 @@
 !pkg
 !.gitignore
 
+!snap-install.sh

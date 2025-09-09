@@ -1,3 +1,5 @@
+# script-snap-install.sh
+
 set -e
 
 sudo pacman -Sy --noconfirm
