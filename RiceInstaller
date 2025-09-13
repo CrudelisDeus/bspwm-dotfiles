@@ -487,7 +487,7 @@ backup_existing_config() {
     #         *) printf " %b%bError:%b write 'y' or 'n'\n" "${BLD}" "${CRE}" "${CNC}" ;;
     #     esac
     # done
-    try_firefox="y"
+    try_firefox="n"
     mkdir -p "$backup_folder" 2>> "$ERROR_LOG"
     printf "\n%b\n\n" "${BLD}${CYE}Backup directory: ${CBL}$backup_folder${CNC}"
     #sleep 2
