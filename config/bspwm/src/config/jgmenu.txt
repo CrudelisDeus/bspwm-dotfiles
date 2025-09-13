@@ -13,6 +13,6 @@ Soft Reload,SoftReload,system-reboot
 Logout,bspc quit,system-log-out
 
 ^tag(exit)
-Block computer, bspc quit, system-lock-screen
+Block computer,ScreenLocker -r,system-lock-screen
 Reboot,systemctl reboot,system-reboot
 Shutdown,systemctl poweroff,system-shutdown
