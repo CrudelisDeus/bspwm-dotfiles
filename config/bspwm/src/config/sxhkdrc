@@ -103,7 +103,7 @@ super + alt + o
 
 # Power off, Reboot, Log out, Lockscreen, kill an app
 ctrl + super + alt + {p,r,q,l,k,s}
-	{systemctl poweroff, systemctl reboot,bspc quit,bspc quit,xkill,SoftReload}
+	{systemctl poweroff, ScreenLocker -r,bspc quit,bspc quit,xkill,SoftReload}
 # ctrl + super + alt + {p,r,q,l,k,s}
 # 	{systemctl poweroff, systemctl reboot,bspc quit,ScreenLocker,xkill,SoftReload}
 
