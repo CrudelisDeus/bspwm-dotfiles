@@ -22,7 +22,7 @@ super + {_,alt + }Return
 	OpenApps --{terminal,floating}
 
 # App launcher
-super + @space
+super + Tab 
 	OpenApps --menu
 
 # Theme Selector
@@ -54,7 +54,6 @@ super + w
 
 super + t
     OpenApps --telegram
-
 # ----- Rofi Applets ----- #
 
 #Terminal Selector
@@ -97,6 +96,8 @@ super + alt + l
 super + alt + k
 	OpenApps --keyboard
 
+super + @space
+	OpenApps --keyboard
 # ----- Environment Apps ----- #
 
 # Scratchpad
