@@ -49,6 +49,9 @@ super + {y,v}
 super + r
     RiceEditor
 
+super + w
+    OpenApps --whats
+
 # ----- Rofi Applets ----- #
 
 #Terminal Selector
