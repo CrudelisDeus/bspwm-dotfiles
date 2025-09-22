@@ -52,6 +52,9 @@ super + r
 super + w
     OpenApps --whats
 
+super + t
+    OpenApps --telegram
+
 # ----- Rofi Applets ----- #
 
 #Terminal Selector
