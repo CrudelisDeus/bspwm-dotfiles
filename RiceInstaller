@@ -967,10 +967,12 @@ welcome
 based_update
 sudo_nopasswd
 # ---------------- #
+# add_gh0stzk_repo
 add_gh0stzk_repo
 add_chaotic_repo
 
 install_dependencies
+# install_gh0stzk_dependencies DELETE 
 install_gh0stzk_dependencies
 install_chaotic_dependencies
 install_aur_dependencies
