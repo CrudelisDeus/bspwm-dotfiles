@@ -947,14 +947,22 @@ app_installer() {
     
     printf "%b\n" "${BLD}${CYE}Installing additional applications...${CNC}"
     
-    # Execute deustaller.sh from dotfiles directory
-    if [ -f "$HOME/dotfiles/config/app_installer/deustaller.sh" ]; then
-        printf "%b\n" "${BLD}${CBL}Running deustaller.sh...${CNC}"
-        chmod +x "$HOME/dotfiles/config/app_installer/deustaller.sh"
-        "$HOME/dotfiles/config/app_installer/deustaller.sh"
-        printf "%b\n" "${BLD}${CGR}Applications installation completed!${CNC}"
+    # Run python installer instead of shell script
+    py_installer="$HOME/dotfiles/config/app_installer/python-installer/main.py"
+    if [ -f "$py_installer" ]; then
+        if command -v python3 >/dev/null 2>&1; then
+            printf "%b\n" "${BLD}${CBL}Running Python installer (python3)...${CNC}"
+            python3 "$py_installer"
+            printf "%b\n" "${BLD}${CGR}Applications installation completed!${CNC}"
+        elif command -v python >/dev/null 2>&1; then
+            printf "%b\n" "${BLD}${CBL}Running Python installer (python)...${CNC}"
+            python "$py_installer"
+            printf "%b\n" "${BLD}${CGR}Applications installation completed!${CNC}"
+        else
+            printf "%b\n" "${BLD}${CRE}Python is not installed. Cannot run the application installer.${CNC}"
+        fi
     else
-        printf "%b\n" "${BLD}${CRE}deustaller.sh not found in dotfiles/config/app_installer/${CNC}"
+        printf "%b\n" "${BLD}${CRE}Python installer not found: ${py_installer}${CNC}"
     fi
     
     # sleep 2
@@ -967,7 +975,7 @@ welcome
 based_update
 sudo_nopasswd
 # ---------------- #
-# add_gh0stzk_repo
+# add_gh0stzk_repo delete
 add_gh0stzk_repo
 add_chaotic_repo
 
