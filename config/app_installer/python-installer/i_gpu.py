@@ -9,7 +9,6 @@ def update_system():
 
     if result.returncode != 0:
         print("System update: Failed")
-        exit(1)
     elif result.returncode == 0:
         print("System update: Success")
 
@@ -26,7 +25,6 @@ def install_nvidia_driver():
         )
         if result.returncode != 0:
             print(f"Pkg {p}: Failed")
-            exit(1)
         elif result.returncode == 0:
             print(f"Pkg {p}: Success")
 
@@ -45,4 +43,5 @@ def install_gpu():
             print("Invalid input. Please enter 'nvidia' or 'skip'.")
 
 
-install_gpu()
+if __name__ == "__main__":
+    install_gpu()

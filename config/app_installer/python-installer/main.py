@@ -1,6 +1,10 @@
+from i_pkg import install_package
+from i_gpu import install_gpu
+
+
 def main():
-    # run the main application logic
-    print("Hello, World!")
+    install_gpu()
+    install_package()
 
 
 if __name__ == "__main__":
