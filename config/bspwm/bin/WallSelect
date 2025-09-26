@@ -5,7 +5,7 @@
 read -r current_rice <"$HOME/.config/bspwm/.rice"
 wall_dir="$HOME/.config/bspwm/rices/$current_rice/walls"
 cache_dir="$HOME/.cache/$USER/wallselect"
-rofi_cmd="rofi -dmenu -theme $HOME/.config/bspwm/src/rofi-themes/WallSelect.rasi"
+rofi_cmd="rofi -dmenu -theme $HOME/.config/bspwm/config/rofi-themes/WallSelect.rasi"
 mkdir -p "$cache_dir"
 
 is_video() {
