@@ -1,4 +1,3 @@
-
 import subprocess
 
 default_pkg = [
@@ -6,6 +5,8 @@ default_pkg = [
     "telegram-desktop", "discord", "rsync",
     "curl", "pavucontrol", "cronie",
     "wget", "obs-studio", "krita",
+    "hunspell", "hunspell-en_US",
+    "hunspell-ru", "hunspell-uk"
 ]
 
 work_pkg = ["signal-desktop", "thunderbird"]
