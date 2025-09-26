@@ -11,7 +11,8 @@
 #   - Special option to capture all monitors at once
 #   - Multiple capture modes:
 #     	* Full screenshot of current monitor
-#     	* Custom area selection or active window capture
+#     	* Custom area selection
+#     	* Active window capture
 #     	* Timed captures (3 seconds)
 #   - System notifications when taking screenshots
 #   - Automatic clipboard copy
@@ -37,6 +38,7 @@ s_select=""
 s_in3="󰔝"
 s_in3select="󰆞 󰔝"
 s_all="󰍹"
+s_window=""
 
 # Function to get current monitor geometry based on mouse position
 get_current_monitor() {
@@ -71,7 +73,7 @@ rofi_cmd() {
 }
 
 run_rofi() {
-    printf "%s\n%s\n%s\n%s\n" "$s_full" "$s_select" "$s_in3" "$s_in3select" "$s_all" | rofi_cmd
+    printf "%s\n%s\n%s\n%s\n%s\n%s\n" "$s_full" "$s_select" "$s_window" "$s_in3" "$s_in3select" "$s_all" | rofi_cmd
 }
 
 show_notification() {
@@ -102,6 +104,10 @@ take_screenshot() {
         "select")
             cmd="$cmd -s -o -c 0.467,0.239,0.863,0.15 -l"
             ;;
+        "window")
+            win_id=$(xdotool getactivewindow 2>/dev/null)
+            [ -n "$win_id" ] && cmd="$cmd -i $win_id"
+            ;;
     esac
 
     $cmd "$filename"
@@ -126,6 +132,8 @@ run_cmd() {
             take_screenshot "full" false ;;
         --sel)
             take_screenshot "select" false ;;
+        --win)
+            take_screenshot "window" false ;;
         --in3)
             countdown 3 && take_screenshot "full" false ;;
         # INFO: new option for screenshot in selected area in 3 seconds
@@ -143,6 +151,8 @@ case ${select_option} in
         run_cmd --now ;;
     "$s_select")
         run_cmd --sel ;;
+    "$s_window")
+        run_cmd --win ;;
     "$s_in3")
         run_cmd --in3 ;;
     "$s_in3select")
