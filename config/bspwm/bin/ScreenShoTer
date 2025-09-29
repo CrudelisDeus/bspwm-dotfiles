@@ -39,6 +39,7 @@ s_in3="󰔝"
 s_in3select="󰆞 󰔝"
 s_all="󰍹"
 s_window=""
+s_edit="󰄄"  # scissors icon
 
 # Function to get current monitor geometry based on mouse position
 get_current_monitor() {
@@ -73,7 +74,7 @@ rofi_cmd() {
 }
 
 run_rofi() {
-    printf "%s\n%s\n%s\n%s\n%s\n%s\n" "$s_full" "$s_select" "$s_window" "$s_in3" "$s_in3select" "$s_all" | rofi_cmd
+    printf "%s\n%s\n%s\n%s\n%s\n%s\n%s\n" "$s_full" "$s_select" "$s_window" "$s_edit" "$s_in3" "$s_in3select" "$s_all" | rofi_cmd
 }
 
 show_notification() {
@@ -108,14 +109,27 @@ take_screenshot() {
             win_id=$(xdotool getactivewindow 2>/dev/null)
             [ -n "$win_id" ] && cmd="$cmd -i $win_id"
             ;;
+        "edit")
+            # Take full screenshot (current monitor) first
+            if [ "$all_monitors" != "true" ]; then
+                geometry=$(get_current_monitor)
+                [ -n "$geometry" ] && cmd="$cmd -g $geometry"
+            fi
+            ;;
     esac
 
     $cmd "$filename"
 
     if [ "$?" -eq 0 ]; then
         paplay /usr/share/sounds/freedesktop/stereo/screen-capture.oga > /dev/null 2>&1
-        copy_screenshot
-        show_notification
+        if [ "$mode" = "edit" ]; then
+            python "$HOME/.config/bspwm/bin/screenshot_editor.py" "$filename"
+            copy_screenshot
+            show_notification
+        else
+            copy_screenshot
+            show_notification
+        fi
     fi
 }
 
@@ -134,6 +148,8 @@ run_cmd() {
             take_screenshot "select" false ;;
         --win)
             take_screenshot "window" false ;;
+        --edit)
+            take_screenshot "edit" false ;;
         --in3)
             countdown 3 && take_screenshot "full" false ;;
         # INFO: new option for screenshot in selected area in 3 seconds
@@ -153,6 +169,8 @@ case ${select_option} in
         run_cmd --sel ;;
     "$s_window")
         run_cmd --win ;;
+    "$s_edit")
+        run_cmd --edit ;;
     "$s_in3")
         run_cmd --in3 ;;
     "$s_in3select")
