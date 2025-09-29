@@ -110,10 +110,12 @@ take_screenshot() {
             [ -n "$win_id" ] && cmd="$cmd -i $win_id"
             ;;
         "edit")
-            # Take full screenshot (current monitor) first
+            # Take full screenshot (current monitor) first, with zero delay for speed
             if [ "$all_monitors" != "true" ]; then
                 geometry=$(get_current_monitor)
-                [ -n "$geometry" ] && cmd="$cmd -g $geometry"
+                [ -n "$geometry" ] && cmd="maim -u -d 0 -g $geometry"
+            else
+                cmd="maim -u -d 0"
             fi
             ;;
     esac
@@ -123,7 +125,12 @@ take_screenshot() {
     if [ "$?" -eq 0 ]; then
         paplay /usr/share/sounds/freedesktop/stereo/screen-capture.oga > /dev/null 2>&1
         if [ "$mode" = "edit" ]; then
-            python "$HOME/.config/bspwm/bin/screenshot_editor.py" "$filename"
+            # Pass monitor geometry (if any) so editor can offset crop correctly
+            if [ -n "$geometry" ]; then
+                python "$HOME/.config/bspwm/bin/screenshot_editor.py" "$filename" "$geometry"
+            else
+                python "$HOME/.config/bspwm/bin/screenshot_editor.py" "$filename"
+            fi
             copy_screenshot
             show_notification
         else
@@ -160,6 +167,13 @@ run_cmd() {
             take_screenshot "full" true ;;
     esac
 }
+
+# If called with a flag, bypass rofi menu
+case "$1" in
+    --now|--sel|--win|--edit|--in3|--in3select|--all)
+        run_cmd "$1"
+        exit 0 ;;
+esac
 
 select_option="$(run_rofi)"
 case ${select_option} in

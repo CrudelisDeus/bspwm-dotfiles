@@ -84,6 +84,10 @@ super + alt + c
 super + alt + s
 	OpenApps --screenshot
 
+# Screenshot (Edit mode directly, bypass rofi)
+super + alt + x
+    ~/.config/bspwm/bin/ScreenShoTer --edit
+
 # PowerMenu
 super + alt + p
 	OpenApps --powermenu

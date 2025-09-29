@@ -6,39 +6,87 @@ import shutil
 import subprocess
 
 
+def which_first(*names: str) -> str:
+    for n in names:
+        p = shutil.which(n)
+        if p:
+            return p
+    return ""
+
+
 def main() -> int:
+    # If no path provided, quickly capture a full-screen shot ourselves
     if len(sys.argv) < 2:
-        print("Usage: screenshot_editor.py <screenshot_path>", file=sys.stderr)
-        return 2
+        pictures = os.popen('xdg-user-dir PICTURES').read().strip() or os.path.expanduser('~/Pictures')
+        os.makedirs(os.path.join(pictures, 'ScreenShots'), exist_ok=True)
+        from datetime import datetime
+        filename = f"Shot-{datetime.now().strftime('%Y-%m-%d-%H%M%S')}.png"
+        path = os.path.join(pictures, 'ScreenShots', filename)
+        maim = which_first("maim")
+        if not maim:
+            print("maim is required to create screenshot.", file=sys.stderr)
+            return 1
+        # fast full-screen capture
+        r = subprocess.run([maim, "-u", "-d", "0", path])
+        if r.returncode != 0:
+            return r.returncode
+    else:
+        path = sys.argv[1]
 
-    path = sys.argv[1]
-
-    # If user has a preferred GUI editor, open it (no python deps)
+    # Optional: Respect user-defined IMAGE_EDITOR
     editor = os.environ.get("IMAGE_EDITOR")
     if editor and shutil.which(editor):
         os.execvp(editor, [editor, path])
         return 0
 
-    # Fallback: Re-select an area over the screen and overwrite the file using maim
-    # This provides a fast, dependency-light crop flow (selection first, save later)
-    maim = shutil.which("maim")
-    if not maim:
-        print("maim is required for selection. Please install maim.", file=sys.stderr)
+    slop = which_first("slop")
+    magick = which_first("magick", "convert")
+
+    if not slop or not magick:
+        print("Missing tools for crop. Required: slop and imagemagick (magick/convert)", file=sys.stderr)
         return 1
 
-    # -s: interactive selection overlay; -u: ignore compositor; -d 0: no delay
-    # Overwrite the provided screenshot path with the selected area
-    cmd = [maim, "-s", "-u", "-d", "0", path]
+    # Fast path: don't show overlay viewer; just select region on screen
+    # Output from slop: x y w h in global coordinates
+    p = subprocess.run([slop, "-f", "%x %y %w %h"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    selection = p.stdout.strip()
+
+    if not selection:
+        # User cancelled selection
+        return 1
+
     try:
-        res = subprocess.run(cmd)
-    except Exception as e:
-        print(f"Failed to run maim: {e}", file=sys.stderr)
+        x, y, w, h = (int(v) for v in selection.split())
+    except Exception:
+        print(f"Invalid selection: {selection}", file=sys.stderr)
         return 1
 
-    return res.returncode
+    # If caller passed monitor geometry, offset crop to local coords
+    # argv[2] format: WxH+X+Y
+    if len(sys.argv) >= 3 and "+" in sys.argv[2]:
+        try:
+            geo = sys.argv[2]
+            size, offx, offy = geo.split("+")
+            base_x = int(offx)
+            base_y = int(offy)
+            x -= base_x
+            y -= base_y
+        except Exception:
+            pass
+
+    geometry = f"{w}x{h}+{x}+{y}"
+    # Crop in-place
+    cmd = [magick, path, "-crop", geometry, "+repage", path]
+    if os.path.basename(magick) == "convert":
+        # Older imagemagick 'convert' syntax is the same
+        cmd = [magick, path, "-crop", geometry, "+repage", path]
+
+    r = subprocess.run(cmd)
+    return r.returncode
 
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
 
 
