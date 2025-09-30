@@ -879,15 +879,15 @@ app_installer() {
     printf "%b\n" "${BLD}${CYE}Installing additional applications...${CNC}"
     
     # Run python installer instead of shell script
-    py_installer="$HOME/dotfiles/config/app_installer/python-installer/main.py"
+    py_installer="$HOME/dotfiles/config/app_installer/main.py"
     if [ -f "$py_installer" ]; then
         if command -v python3 >/dev/null 2>&1; then
             printf "%b\n" "${BLD}${CBL}Running Python installer (python3)...${CNC}"
-            python3 "$py_installer"
+            sudo python3 "$py_installer"
             printf "%b\n" "${BLD}${CGR}Applications installation completed!${CNC}"
         elif command -v python >/dev/null 2>&1; then
             printf "%b\n" "${BLD}${CBL}Running Python installer (python)...${CNC}"
-            python "$py_installer"
+            sudo python "$py_installer"
             printf "%b\n" "${BLD}${CGR}Applications installation completed!${CNC}"
         else
             printf "%b\n" "${BLD}${CRE}Python is not installed. Cannot run the application installer.${CNC}"

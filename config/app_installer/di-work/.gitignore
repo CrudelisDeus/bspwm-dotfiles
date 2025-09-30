@@ -1,7 +1,0 @@
-*
-
-!script*.sh
-!pkg
-!.gitignore
-
-!snap-install.sh
