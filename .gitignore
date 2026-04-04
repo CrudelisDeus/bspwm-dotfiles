@@ -205,3 +205,13 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+
+# vm
+.config/*
+## wm
+!.config/bspwm/**
+!.config/bspwm/
+## demon hotkays
+!.config/sxhkd/
+!.config/sxhkd/**
