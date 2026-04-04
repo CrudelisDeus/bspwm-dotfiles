@@ -1,9 +1,10 @@
-rm -R ./.config
-cp -R ~/.config .config
+rm -R ./config
+mkdir config
+cp -R ~/.config/* config
 
-rm -R ./bash
-mkdir ./bash
-cp ~/.bash_logout ./bash
-cp ~/.bash_profile ./bash
-cp ~/.bashrc ./bash
-cp ~/.xinitrc ./bash
+rm -R ./home
+mkdir home
+cp ~/.bash_logout ./home
+cp ~/.bash_profile ./home
+cp ~/.bashrc ./home
+cp ~/.xinitrc ./home

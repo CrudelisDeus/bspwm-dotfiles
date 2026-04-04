@@ -33,6 +33,14 @@ std_pkg = [
     "btop",
     "fastfetch",
     "less",
+
+    # code editor
+    "vim",
+    "neovim",
+    "nodejs",
+    "npm",
+    "git",
+    "base-devel",
 ]
 
 # function

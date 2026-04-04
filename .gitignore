@@ -208,13 +208,13 @@ __marimo__/
 
 
 # vm
-.config/*
+config/*
 ## wm
-!.config/bspwm/**
-!.config/bspwm/
+!config/bspwm/**
+!config/bspwm/
 ## demon hotkays
-!.config/sxhkd/
-!.config/sxhkd/**
+!config/sxhkd/
+!config/sxhkd/**
 ## editor
-!.config/kitty/
-!.config/kitty/**
+!config/kitty/
+!config/kitty/**
