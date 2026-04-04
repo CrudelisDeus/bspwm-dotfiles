@@ -47,6 +47,13 @@ std_pkg = [
 
     # compositor
     "picom",
+
+    # bar
+    "polybar",
+
+    # clipboard
+    "xclip",
+    "xsel",
 ]
 
 

@@ -12,11 +12,18 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 picom --config ~/.config/picom/picom.conf &
 # --------------
 
+# ---bar
+polybar main &
+# ------
+
+
 # --- wallpaper -----------------------
 feh --bg-fill ~/.config/wallpaper/1.png
 # -------------------------------------
 
-bspc monitor -d I II III IV V VI VII VIII IX X
+# ---monitor
+bspc monitor -d 1 2 3 4 5 6
+# ----------
 
 # --- theme ------------------------------
 bspc config border_width 2
