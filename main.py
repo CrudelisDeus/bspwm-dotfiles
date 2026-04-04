@@ -27,6 +27,12 @@ std_pkg = [
     "bspwm",
     "sxhkd",
 
+    # shell output
+    "bat",
+    "eza",
+    "btop",
+    "fastfetch",
+    "less",
 ]
 
 # function
