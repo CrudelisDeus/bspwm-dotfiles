@@ -215,6 +215,9 @@ config/*
 ## demon hotkays
 !config/sxhkd/
 !config/sxhkd/**
-## editor
+## terminal
 !config/kitty/
 !config/kitty/**
+## editor
+!config/nvim/
+!config/nvim/**
