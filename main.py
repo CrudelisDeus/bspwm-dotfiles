@@ -1,10 +1,10 @@
-import subprocess 
+import subprocess
 
-# pkg 
+# pkg
 std_pkg = [
     # python
     "python",
-    
+
     # fonts
     "ttf-dejavu",
     "ttf-font-awesome",
@@ -41,9 +41,11 @@ std_pkg = [
     "npm",
     "git",
     "base-devel",
+
+    # wallpaper
+    "feh",
 ]
 
-# function
 
 def install_pkg(pkgs: list) -> None:
     for pkg in pkgs:
@@ -55,7 +57,7 @@ def install_pkg(pkgs: list) -> None:
                 text=True
             )
             result = 0
-        except Exception as e:
+        except Exception:
             result = 1
 
         if result != 0:
@@ -63,9 +65,10 @@ def install_pkg(pkgs: list) -> None:
         else:
             print(f'pkg OK: {pkg}')
 
-# start
+
 def main():
     install_pkg(std_pkg)
+
 
 if __name__ == '__main__':
     main()
