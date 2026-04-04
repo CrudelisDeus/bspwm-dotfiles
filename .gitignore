@@ -222,3 +222,6 @@ config/*
 !config/nvim/
 !config/nvim/**
 !config/nvim/lazy-lock.json
+## wallpaper
+!config/wallpaper/
+!config/wallpaper/**
