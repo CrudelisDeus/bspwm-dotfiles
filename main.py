@@ -44,6 +44,9 @@ std_pkg = [
 
     # wallpaper
     "feh",
+
+    # compositor
+    "picom",
 ]
 
 

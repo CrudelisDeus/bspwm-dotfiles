@@ -225,3 +225,6 @@ config/*
 ## wallpaper
 !config/wallpaper/
 !config/wallpaper/**
+## compositor
+!config/picom/
+!config/picom/**
