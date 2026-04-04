@@ -215,3 +215,6 @@ __marimo__/
 ## demon hotkays
 !.config/sxhkd/
 !.config/sxhkd/**
+## editor
+!.config/kitty/
+!.config/kitty/**
