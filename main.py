@@ -14,6 +14,10 @@ std_pkg = [
 
     # dbus
     "dbus",
+    "dunst",
+    "libcanberra",
+    "xdg-desktop-portal",
+    "xdg-desktop-portal-gtk",
 
     # xorg
     "xorg-xinit",
@@ -22,7 +26,6 @@ std_pkg = [
     # bspwm
     "bspwm",
     "sxhkd",
-
 
 ]
 
