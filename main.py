@@ -12,9 +12,12 @@ std_pkg = [
     "ttf-jetbrains-mono-nerd",
     "noto-fonts",
 
+    # notify
+    "dunst",
+    "libnotify",
+
     # dbus
     "dbus",
-    "dunst",
     "libcanberra",
     "xdg-desktop-portal",
     "xdg-desktop-portal-gtk",
@@ -22,7 +25,6 @@ std_pkg = [
     # xorg
     "xorg-xinit",
     "xorg",
-
     # bspwm
     "bspwm",
     "sxhkd",
@@ -79,6 +81,7 @@ std_pkg = [
 
 work_and_home_pkg = [
     "telegram-desktop",
+    "discord",
 ]
 
 def install_pkg(pkgs: list) -> None:
