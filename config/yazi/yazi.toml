@@ -1,0 +1,17 @@
+[mgr]
+show_hidden = true
+sort_by = "natural"
+sort_reverse = false
+linemode = "size"
+mouse = true
+
+[opener]
+open = [
+  { run = 'xdg-open "$@"', desc = "Open" }
+]
+
+[preview]
+image = true
+max_width = 2000
+max_height = 2000
+image_quality = 90

@@ -42,6 +42,9 @@ std_pkg = [
     "git",
     "base-devel",
 
+    # terminal
+    "kitty",
+
     # wallpaper
     "feh",
 
@@ -54,8 +57,29 @@ std_pkg = [
     # clipboard
     "xclip",
     "xsel",
+
+    # launcher
+    "rofi",
+
+    # browser
+    "firefox",
+
+    # file manager
+    "yazi",
+    "ffmpegthumbnailer",
+    "poppler",
+    "fd",
+    "ripgrep",
+    "fzf",
+    "zoxide",
+    "chafa",
+    "resvg",
+    "7zip",
 ]
 
+work_and_home_pkg = [
+    "telegram-desktop",
+]
 
 def install_pkg(pkgs: list) -> None:
     for pkg in pkgs:
@@ -78,6 +102,7 @@ def install_pkg(pkgs: list) -> None:
 
 def main():
     install_pkg(std_pkg)
+    install_pkg(work_and_home_pkg)
 
 
 if __name__ == '__main__':

@@ -231,3 +231,6 @@ config/*
 ## bar
 !config/polybar/
 !config/polybar/**
+## file manager
+!config/yazi/
+!config/yazi/**

@@ -16,6 +16,9 @@ picom --config ~/.config/picom/picom.conf &
 polybar main &
 # ------
 
+# ---change language
+setxkbmap -layout us,ru -option grp:win_space_toggle &
+# -------------------
 
 # --- wallpaper -----------------------
 feh --bg-fill ~/.config/wallpaper/1.png

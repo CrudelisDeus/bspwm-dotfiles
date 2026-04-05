@@ -7,8 +7,12 @@ super + Return
 	kitty
 
 # program launcher
-super + @space
-	dmenu_run
+alt + space
+    rofi -show drun
+
+# file manager
+super + e
+    kitty -e yazi
 
 # make sxhkd reload its configuration files:
 super + Escape
