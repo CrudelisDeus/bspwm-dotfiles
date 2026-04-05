@@ -228,3 +228,6 @@ config/*
 ## compositor
 !config/picom/
 !config/picom/**
+## bar
+!config/polybar/
+!config/polybar/**
