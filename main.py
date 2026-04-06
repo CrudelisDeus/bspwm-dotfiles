@@ -77,11 +77,20 @@ std_pkg = [
     "chafa",
     "resvg",
     "7zip",
+
+    # audio
+    "pipewire",
+    "pipewire-audio",
+    "pipewire-alsa",
+    "pipewire-pulse",
+    "wireplumber",
+    "alsa-utils",
 ]
 
 work_and_home_pkg = [
     "telegram-desktop",
     "discord",
+    "anki",
 ]
 
 def install_pkg(pkgs: list) -> None:
