@@ -234,3 +234,6 @@ config/*
 ## file manager
 !config/yazi/
 !config/yazi/**
+## dunst
+!config/dunst/
+!config/dunst/**

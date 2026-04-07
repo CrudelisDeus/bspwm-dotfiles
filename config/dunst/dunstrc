@@ -1,0 +1,26 @@
+[global]
+    format = "<b>%a</b>\n%s\n%b"
+    notification_limit = 5
+
+    progress_bar = true
+    progress_bar_height = 6
+
+    frame_color = "#9f4559"
+
+    transparency = 0
+
+[urgency_low]
+    background = "#000000"
+    foreground = "#000000"
+    timeout = 5
+
+[urgency_normal]
+    foreground = "#ffffff"
+    timeout = 8
+    background = "#000000"
+
+[urgency_critical]
+    frame_color = "#ff0000"
+    background = "#000000"
+    foreground = "#000000"
+    timeout = 0
