@@ -85,6 +85,7 @@ std_pkg = [
     "pipewire-pulse",
     "wireplumber",
     "alsa-utils",
+    "mpv",
 ]
 
 work_and_home_pkg = [
