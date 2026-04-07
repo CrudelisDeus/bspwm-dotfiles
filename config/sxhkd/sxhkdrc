@@ -14,6 +14,10 @@ super + space
 Print
     flameshot gui
 
+# clipboard history manager
+super + v
+    rofi -modi "clipboard:greenclip print" -show 
+
 # file manager
 super + e
     kitty -e yazi

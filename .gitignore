@@ -237,3 +237,6 @@ config/*
 ## dunst
 !config/dunst/
 !config/dunst/**
+## rofi 
+!config/rofi/
+config/rofi/**
