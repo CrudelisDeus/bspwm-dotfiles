@@ -86,6 +86,9 @@ std_pkg = [
     "wireplumber",
     "alsa-utils",
     "mpv",
+
+    # screenshot
+    "flameshot",
 ]
 
 work_and_home_pkg = [

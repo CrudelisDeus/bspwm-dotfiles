@@ -17,7 +17,7 @@ polybar main &
 # ------
 
 # ---change language
-setxkbmap -layout us,ru -option grp:win_space_toggle &
+setxkbmap -layout us,ru -option grp:alt_shift_toggle &
 # -------------------
 
 # --- wallpaper -----------------------

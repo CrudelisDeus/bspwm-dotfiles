@@ -11,6 +11,7 @@ alias ls='eza -lah --icons --group-directories-first --time-style=long-iso'
 alias cat='bat'
 alias top='btop'
 alias grep='grep --color=auto'
+alias vim='nvim'
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return

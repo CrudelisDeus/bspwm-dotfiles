@@ -7,8 +7,12 @@ super + Return
 	kitty
 
 # program launcher
-alt + space
+super + space
     rofi -show drun
+
+# screenshot
+Print
+    flameshot gui
 
 # file manager
 super + e
