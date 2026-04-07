@@ -18,6 +18,9 @@ Print
 super + v
     rofi -modi "clipboard:greenclip print" -show 
 
+super + l
+    ~/.config/i3lock/lock.sh
+
 # file manager
 super + e
     kitty -e yazi

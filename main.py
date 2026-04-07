@@ -89,6 +89,10 @@ std_pkg = [
 
     # screenshot
     "flameshot",
+
+    # lockscreen
+    "imagemagick",
+    "scrot",
 ]
 
 yay_pkg = [
@@ -97,7 +101,11 @@ yay_pkg = [
 ]
 
 yay_list_pkg = [
-    'greenclip'
+    # clip hisrory
+    'greenclip',
+
+    # lockscreen
+    'i3lock-color'
 ]
 
 work_and_home_pkg = [
