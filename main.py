@@ -5,6 +5,9 @@ std_pkg = [
     # python
     "python",
 
+    # openssh
+    "openssh",
+
     # fonts
     "ttf-dejavu",
     "ttf-font-awesome",
