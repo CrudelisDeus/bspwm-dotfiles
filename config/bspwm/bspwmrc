@@ -1,5 +1,10 @@
 #! /bin/sh
 
+#   / _ \
+# \_\(_)/_/  github: CrudelisDeus
+#  _//o\\_   email:  karakurt.deus@gmail.com
+#   /   \
+
 pgrep -x sxhkd >/dev/null || sxhkd &
 pgrep -x dunst >/dev/null || dunst &
 
@@ -13,6 +18,8 @@ picom --config ~/.config/picom/picom.conf &
 # --------------
 
 # ---bar
+killall -q polybar
+while pgrep -x polybar >/dev/null; do sleep 0.5; done
 polybar main &
 # ------
 
@@ -35,7 +42,7 @@ bspc monitor -d 1 2 3 4 5 6
 # --- theme ------------------------------
 bspc config border_width 2
 bspc config window_gap 5
-bspc config focused_border_color "#9f4559"
+bspc config focused_border_color "#329DA4"
 bspc config nornal_border_color "#ffffff"
 #-----------------------------------------
 

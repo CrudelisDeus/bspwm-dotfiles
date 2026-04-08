@@ -1,56 +1,55 @@
 * {
     font: "JetBrainsMono Nerd Font 11";
+    main: #329DA4;
+    bg: #000000;
+    fg: #ffffff;
+    bg-alt: #111111;
 }
 
 window {
-    background-color: #000000;
+    background-color: @bg;
 }
 
 prompt {
-    text-color: #9f4559;
+    text-color: @main;
 }
 
 textbox-prompt-colon {
-    text-color: #9f4559;
+    text-color: @main;
 }
 
 entry {
-    text-color: #ffffff;
+    text-color: @fg;
+    cursor-width: 0px;
 }
 
 element-text {
-    text-color: #ffffff;
+    text-color: @fg;
 }
 
 element normal.normal {
-    background-color: #000000;
-    text-color: #ffffff;
+    background-color: @bg;
+    text-color: @fg;
 }
 
 element alternate.normal {
-    background-color: #000000;
-    text-color: #ffffff;
+    background-color: @bg;
+    text-color: @fg;
 }
 
 element selected.normal {
-    background-color: #9f4559;
-    text-color: #ffffff;
+    background-color: @main;
+    text-color: @fg;
 }
 
 element selected.active {
-    background-color: #9f4559;
-    text-color: #ffffff;
+    background-color: @main;
+    text-color: @fg;
 }
 
 scrollbar {
-    background-color: #111111;
-    handle-color: #9f4559;
-/*    border-radius: 6px; */
-}
-
-entry {
-    text-color: #ffffff;
-    cursor-width: 0px;
+    background-color: @bg-alt;
+    handle-color: @main;
 }
 
 inputbar {
@@ -64,7 +63,5 @@ listview {
     border: 0px;
     padding: 0px;
     spacing: 0px;
-    background-color: #000000;
+    background-color: @bg;
 }
-
-

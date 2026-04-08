@@ -12,6 +12,7 @@ super + space
 
 # screenshot
 Print
+#super + o
     flameshot gui
 
 # clipboard history manager
