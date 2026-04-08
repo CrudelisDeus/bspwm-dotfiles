@@ -1,0 +1,70 @@
+* {
+    font: "JetBrainsMono Nerd Font 11";
+}
+
+window {
+    background-color: #000000;
+}
+
+prompt {
+    text-color: #9f4559;
+}
+
+textbox-prompt-colon {
+    text-color: #9f4559;
+}
+
+entry {
+    text-color: #ffffff;
+}
+
+element-text {
+    text-color: #ffffff;
+}
+
+element normal.normal {
+    background-color: #000000;
+    text-color: #ffffff;
+}
+
+element alternate.normal {
+    background-color: #000000;
+    text-color: #ffffff;
+}
+
+element selected.normal {
+    background-color: #9f4559;
+    text-color: #ffffff;
+}
+
+element selected.active {
+    background-color: #9f4559;
+    text-color: #ffffff;
+}
+
+scrollbar {
+    background-color: #111111;
+    handle-color: #9f4559;
+/*    border-radius: 6px; */
+}
+
+entry {
+    text-color: #ffffff;
+    cursor-width: 0px;
+}
+
+inputbar {
+    border: 0px;
+    margin: 0px;
+    padding: 0px;
+    spacing: 0px;
+}
+
+listview {
+    border: 0px;
+    padding: 0px;
+    spacing: 0px;
+    background-color: #000000;
+}
+
+

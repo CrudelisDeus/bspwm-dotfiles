@@ -239,7 +239,7 @@ config/*
 !config/dunst/**
 ## rofi 
 !config/rofi/
-config/rofi/**
+!config/rofi/**
 # lockscreen
 !config/i3lock/
 !config/i3lock/**
