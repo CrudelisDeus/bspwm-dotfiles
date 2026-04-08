@@ -5,7 +5,7 @@
     progress_bar = true
     progress_bar_height = 6
 
-    frame_color = "#9f4559"
+    frame_color = "#329DA4"
 
     transparency = 0
 
@@ -20,7 +20,7 @@
     background = "#000000"
 
 [urgency_critical]
-    frame_color = "#ff0000"
+    frame_color = "#329DA4"
     background = "#000000"
     foreground = "#000000"
     timeout = 0

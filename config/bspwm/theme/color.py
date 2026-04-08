@@ -17,6 +17,29 @@ MAIN = '#329DA4'
 def reload_bspwm():
     subprocess.run(["bspc", "wm", "-r"])
 
+def reload_dunst():
+    subprocess.run(["killall", "dunst"], stderr=subprocess.DEVNULL)
+    subprocess.Popen(["dunst"])
+
+def change_dunst() -> bool:
+    # change frame color
+    try:
+        path = Path.home() / ".config/dunst/dunstrc"
+        text = path.read_text()
+
+        pattern = r'(frame_color\s*=\s*")(.+?)(")'
+
+        if re.search(pattern, text):
+            text = re.sub(pattern, rf'\1{MAIN}\3', text)
+        else:
+            text += f'\nframe_color = "{MAIN}"\n'
+
+        path.write_text(text)
+        return True
+
+    except:
+        return False
+
 def change_rofi() -> bool:
     # change main color 
     try:
@@ -87,6 +110,12 @@ def main():
     else:
         print("FAILED: rofi main color")
 
+    if change_dunst():
+        print("OK: dunst frame_color")
+    else:
+        print("FAILED: dunst frame_color")
+
+    reload_dunst()
     reload_bspwm()
 
 if __name__ == '__main__':
