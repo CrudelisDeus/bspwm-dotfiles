@@ -96,6 +96,9 @@ std_pkg = [
     # lockscreen
     "imagemagick",
     "scrot",
+
+    # color selector
+    "xcolor",
 ]
 
 yay_pkg = [
@@ -116,6 +119,7 @@ work_and_home_pkg = [
     "discord",
     "anki",
     "obsidian",
+    "obs-studio",
 ]
 
 nvidia_pkg = [

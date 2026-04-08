@@ -12,6 +12,7 @@ import re
 import subprocess
 
 MAIN = '#329DA4'
+#MAIN = '#4c394e'
 
 def reload_bspwm():
     subprocess.run(["bspc", "wm", "-r"])
