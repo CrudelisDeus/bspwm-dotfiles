@@ -112,6 +112,14 @@ work_and_home_pkg = [
     "telegram-desktop",
     "discord",
     "anki",
+    "obsidian",
+]
+
+nvidia_pkg = [
+    'nvidia-dkms',
+    'nvidia-utils',
+    'nvidia-settings',
+    'linux-headers',
 ]
 
 def install_pkg(pkgs: list) -> None:
@@ -204,6 +212,7 @@ def main():
     install_yay()
     install_yay_pkg(yay_list_pkg)
 
+    #install_pkg(nvidia_pkg)
 
 if __name__ == '__main__':
     main()
