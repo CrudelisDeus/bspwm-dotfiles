@@ -28,8 +28,6 @@ def check_process(process: str) -> bool:
 def check_env(var: str) -> bool:
     return bool(os.environ.get(var))
 
-
-
 def check_process_list() -> None:
     for p in process_list:
         status = f"OK" if check_process(p) else f"FAIL"
@@ -43,6 +41,8 @@ def check_env_list() -> None:
 def main() -> None:
     check_process_list()
     check_env_list()
+
+    input("\nPress Enter to exit...")
 
 if __name__ == '__main__':
     main()

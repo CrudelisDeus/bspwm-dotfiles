@@ -19,7 +19,7 @@ super + v
     rofi -modi "clipboard:greenclip print" -show 
 
 super + l
-    ~/.config/i3lock/lock.sh
+    python ~/.config/bspwm/bin/lockscreen.py
 
 # file manager
 super + e
