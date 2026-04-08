@@ -12,15 +12,14 @@ super + space
 
 # screenshot
 Print
-#super + o
+    flameshot gui
+
+super + shift + s
     flameshot gui
 
 # clipboard history manager
 super + v
     rofi -modi "clipboard:greenclip print" -show 
-
-#super + l
-#    python ~/.config/bspwm/bin/lockscreen.py
 
 super + p
     ~/.config/rofi/powermenu.sh
@@ -36,6 +35,10 @@ super + Escape
 #
 # bspwm hotkeys
 #
+
+# color select
+super + alt + c
+    xcolor | xclip -selection clipboard
 
 # quit/restart bspwm
 super + alt + {q,r}
