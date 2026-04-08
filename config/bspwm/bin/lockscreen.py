@@ -19,7 +19,7 @@ def run(cmd: list[str]) -> bool:
 
 
 def main() -> None:
-    time.sleep(1)
+    time.sleep(0)
 
     if not run(["scrot", "-o", IMG]):
         return

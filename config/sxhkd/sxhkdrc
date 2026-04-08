@@ -18,8 +18,11 @@ Print
 super + v
     rofi -modi "clipboard:greenclip print" -show 
 
-super + l
-    python ~/.config/bspwm/bin/lockscreen.py
+#super + l
+#    python ~/.config/bspwm/bin/lockscreen.py
+
+super + p
+    ~/.config/rofi/powermenu.sh
 
 # file manager
 super + e
