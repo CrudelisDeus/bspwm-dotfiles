@@ -22,7 +22,7 @@ super + v
     rofi -modi "clipboard:greenclip print" -show 
 
 super + p
-    ~/.config/rofi/powermenu.sh
+    ~/.config/bspwm/bin/rofi_powermenu.py
 
 # file manager
 super + e
