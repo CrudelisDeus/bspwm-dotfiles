@@ -8,6 +8,8 @@
 
 window {
     background-color: @bg;
+    width: 800px;
+    height: 300px;
 }
 
 prompt {
@@ -65,3 +67,4 @@ listview {
     spacing: 0px;
     background-color: @bg;
 }
+

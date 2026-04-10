@@ -111,7 +111,10 @@ yay_list_pkg = [
     'greenclip',
 
     # lockscreen
-    'i3lock-color'
+    'i3lock-color',
+
+#    # launcher
+#    'eww',
 ]
 
 work_and_home_pkg = [
