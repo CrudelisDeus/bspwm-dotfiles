@@ -85,6 +85,9 @@ def get_theme(img: str):
         background-color: @bg-alt;
         handle-color: @main;
     }}
+    element {{
+        padding: 0px 0px 0px 10px;
+    }}
     '''
     return powermenu_theme
 
@@ -109,6 +112,7 @@ def rofi_launcher(theme):
         [
             "rofi",
             "-show", "drun",
+#            "-show-icons",
             "-theme-str", theme,
         ]
     )
