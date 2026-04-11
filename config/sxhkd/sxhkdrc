@@ -19,7 +19,7 @@ super + shift + s
 
 # clipboard history manager
 super + v
-    rofi -modi "clipboard:greenclip print" -show 
+    /home/dmytro/.config/bspwm/bin/rofi_buffer_menu.py
 
 super + p
     ~/.config/bspwm/bin/rofi_powermenu.py

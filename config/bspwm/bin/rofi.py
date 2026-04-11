@@ -116,3 +116,13 @@ def rofi_launcher(theme):
             "-theme-str", theme,
         ]
     )
+
+def rofi_buffer(theme):
+    subprocess.Popen(
+        [
+            "rofi",
+            "-modi", "clipboard:greenclip print",
+            "-show", "clipboard",
+            "-theme-str", theme,
+        ]
+    )
