@@ -17,7 +17,7 @@ def main():
     choice = rofi_menu(options, get_theme(img), "Power")
 
     if choice == "Screen lock":
-        subprocess.Popen(["python", os.path.expanduser("~/.config/bspwm/bin/lockscreen.py")])
+        subprocess.Popen(["python", os.path.expanduser("~/.config/bspwm/bin/powermenu_lockscreen.py")])
 
     elif choice == "Logout":
         subprocess.run(["loginctl", "terminate-session", os.environ.get("XDG_SESSION_ID", "")])

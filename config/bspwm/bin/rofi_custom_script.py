@@ -14,7 +14,7 @@ def main():
     choice = rofi_menu(options, get_theme(img), "Custom script")
 
     if choice == "Check system":
-        subprocess.Popen(["kitty", "-e", "python", os.path.expanduser("~/.config/bspwm/bin/checks.py")])
+        subprocess.Popen(["kitty", "-e", "python", os.path.expanduser("~/.config/bspwm/bin/custom_script_checks.py")])
 
 if __name__ == "__main__":
     main()
