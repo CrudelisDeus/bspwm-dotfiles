@@ -132,6 +132,9 @@ work_and_home_pkg = [
     "anki",
     "obsidian",
     "obs-studio",
+    # for anki TTS
+    "speech-dispatcher",
+    "espeak-ng"
 ]
 
 nvidia_pkg = [

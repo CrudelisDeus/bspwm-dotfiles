@@ -245,4 +245,7 @@ config/nvim/lazy-lock.json
 # lockscreen
 !config/i3lock/
 !config/i3lock/**
+# anki for TTS
+!/config/speech-dispatcher/
+!/config/speech-dispatcher/**
 
