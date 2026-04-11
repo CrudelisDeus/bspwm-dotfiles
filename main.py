@@ -99,6 +99,10 @@ std_pkg = [
 
     # color selector
     "xcolor",
+
+    # update mirror
+    "reflector",
+    "pacman-contrib",
 ]
 
 yay_pkg = [

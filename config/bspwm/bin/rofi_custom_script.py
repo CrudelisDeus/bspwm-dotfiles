@@ -8,6 +8,7 @@ img = "custom_script.png"
 
 options = [
     "Check system",
+    "Update system",
 ]
 
 def main():
@@ -15,6 +16,8 @@ def main():
 
     if choice == "Check system":
         subprocess.Popen(["kitty", "-e", "python", os.path.expanduser("~/.config/bspwm/bin/custom_script_checks.py")])
+    elif choice == "Update system":
+        subprocess.Popen(["kitty", "-e", "python", os.path.expanduser("~/.config/bspwm/bin/custom_script_update.py")])
 
 if __name__ == "__main__":
     main()
