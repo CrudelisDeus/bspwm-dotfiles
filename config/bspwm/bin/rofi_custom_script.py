@@ -9,6 +9,7 @@ img = "custom_script.png"
 options = [
     "Check system",
     "Update system",
+    "Toggle theme",
 ]
 
 def main():
@@ -18,6 +19,9 @@ def main():
         subprocess.Popen(["kitty", "-e", "python", os.path.expanduser("~/.config/bspwm/bin/custom_script_checks.py")])
     elif choice == "Update system":
         subprocess.Popen(["kitty", "-e", "python", os.path.expanduser("~/.config/bspwm/bin/custom_script_update.py")])
+    elif choice == "Toggle theme":
+        subprocess.Popen(["python", os.path.expanduser("~/.config/bspwm/bin/custom_script_change_theme_dark_or_light.py")])
+
 
 if __name__ == "__main__":
     main()

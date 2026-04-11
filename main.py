@@ -103,6 +103,11 @@ std_pkg = [
     # update mirror
     "reflector",
     "pacman-contrib",
+
+    # change default theme (dark or light)
+    "gsettings",
+    "dconf",
+    "gsettings-desktop-schemas",
 ]
 
 yay_pkg = [
