@@ -8,6 +8,9 @@ process_list = [
     'picom',
     'polybar',
     'greenclip',
+    'pipewire',
+    'pipewire-pulse',
+    'wireplumber'
 ]
 
 env_list = [
