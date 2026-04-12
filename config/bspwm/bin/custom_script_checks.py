@@ -22,6 +22,18 @@ env_list = [
     }
 ]
 
+def check_firewall() -> None:
+    result = subprocess.run(
+        ["sudo", "ufw", "status"],
+        capture_output=True,
+        text=True
+    )
+
+    if "Status: active" in result.stdout:
+        print("firewall OK: ufw")
+    else:
+        print("firewall FAIL: ufw")
+
 def check_process(process: str) -> bool:
     result = subprocess.run(
         ['pgrep', '-x', process],
@@ -46,6 +58,7 @@ def check_env_list() -> None:
 def main() -> None:
     check_process_list()
     check_env_list()
+    #check_firewall()
 
     input("\nPress Enter to exit...")
 

@@ -151,6 +151,10 @@ nvidia_pkg = [
     'linux-headers',
 ]
 
+firewall_pkg = [
+    'ufw',
+]
+
 def install_pkg(pkgs: list) -> None:
     for pkg in pkgs:
         try:
@@ -251,6 +255,57 @@ def create_std_dir():
     else:
         print(f'std dir: OK')
 
+def enable_firewall():
+    try:
+        subprocess.run(
+            ["sudo", "ufw", "--force", "enable"],
+            check=True,
+            capture_output=True,
+            text=True
+        )
+        subprocess.run(
+            ["sudo", "systemctl", "enable", "ufw"],
+            check=True,
+            capture_output=True,
+            text=True
+        )
+        result = 0
+    except Exception:
+        result = 1
+
+    if result != 0:
+        print("ufw start: FAILED")
+    else:
+        print("ufw start: OK")
+
+def create_std_rule_firewall():
+    try:
+        subprocess.run(
+            ["sudo", "ufw", "default", "deny", "incoming"],
+            check=True,
+            capture_output=True,
+            text=True
+        )
+        subprocess.run(
+            ["sudo", "ufw", "default", "allow", "outgoing"],
+            check=True,
+            capture_output=True,
+            text=True
+        )
+        result = 0
+    except Exception:
+        result = 1
+
+    if result != 0:
+        print(f'ufw rule: FAILED')
+    else:
+        print(f'ufw rule: OK')
+
+def setup_firewall():
+    install_pkg(firewall_pkg)
+    create_std_rule_firewall()
+    enable_firewall()
+
 # start programm
 def main():
     install_pkg(std_pkg)
@@ -262,6 +317,8 @@ def main():
     #install_pkg(nvidia_pkg)
 
     create_std_dir()
+
+    setup_firewall()
 
 if __name__ == '__main__':
     main()
