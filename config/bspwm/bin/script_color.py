@@ -13,6 +13,15 @@ import subprocess
 
 MAIN = '#329DA4'
 #MAIN = '#4c394e'
+RESET = "\033[0m"
+
+def hex_to_ansi(hex_color: str) -> str:
+    hex_color = hex_color.lstrip("#")
+    r, g, b = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+    return f"\033[38;2;{r};{g};{b}m"
+
+def c(text: str) -> str:
+    return f"{hex_to_ansi(MAIN)}{text}{RESET}"
 
 def reload_bspwm():
     subprocess.run(["bspc", "wm", "-r"])

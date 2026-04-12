@@ -23,6 +23,7 @@ def main():
     "Update system",
     f"Toggle theme",
     "System info",
+    "About Author",
     ]
 
     choice = rofi_menu(options, get_theme(img), "Custom script")
@@ -40,6 +41,13 @@ def main():
             "kitty", "-e", "python",
             os.path.expanduser("~/.config/bspwm/bin/custom_script_pc_info.py")
         ])
+    elif choice == "About Author":
+        subprocess.Popen([
+            "kitty", "-e", "python",
+            os.path.expanduser("~/.config/bspwm/bin/custom_script_about_author.py")
+        ])
+
+
 
 
 
