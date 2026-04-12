@@ -32,7 +32,7 @@ setxkbmap -layout us,ru -option grp:alt_shift_toggle &
 # -------------------
 
 # --- wallpaper -----------------------
-~/.config/bspwm/bin/set_background.py &
+~/.config/bspwm/bin/script_select_background.py &
 # -------------------------------------
 
 # ---monitor

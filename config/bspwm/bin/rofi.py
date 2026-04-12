@@ -3,6 +3,8 @@
 import subprocess
 import os
 
+from script_select_background import WALLPAPER_WORKDIR
+
 def get_theme(img: str):
     powermenu_theme = rf'''
     window {{
@@ -126,3 +128,23 @@ def rofi_buffer(theme):
             "-theme-str", theme,
         ]
     )
+
+def rofi_background_img(theme):
+    path = WALLPAPER_WORKDIR
+    files = os.listdir(path)
+
+    rofi = subprocess.Popen(
+        ["rofi", "-dmenu", "-p", "Wallpaper", "-theme-str", theme],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        text=True
+    )
+
+    out, _ = rofi.communicate("\n".join(files))
+
+    selected = out.strip()
+
+    if not selected:
+        return None
+
+    return os.path.join(path, selected)
