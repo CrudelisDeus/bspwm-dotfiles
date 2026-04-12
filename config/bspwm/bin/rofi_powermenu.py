@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import subprocess
 import os
@@ -19,8 +19,10 @@ def main():
     if choice == "Screen lock":
         subprocess.Popen(["python", os.path.expanduser("~/.config/bspwm/bin/powermenu_lockscreen.py")])
 
+#    elif choice == "Logout":
+#        subprocess.run(["loginctl", "terminate-session", os.environ.get("XDG_SESSION_ID", "")])
     elif choice == "Logout":
-        subprocess.run(["loginctl", "terminate-session", os.environ.get("XDG_SESSION_ID", "")])
+        subprocess.run(["loginctl", "terminate-user", os.environ["USER"]])
 
     elif choice == "Shutdown":
         subprocess.run(["systemctl", "poweroff"])
