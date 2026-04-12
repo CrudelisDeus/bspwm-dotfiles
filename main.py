@@ -1,4 +1,7 @@
+#!/usr/bin/env python3
+
 import subprocess
+from pathlib import Path
 
 # pkg
 std_pkg = [
@@ -230,6 +233,24 @@ def install_yay():
     clone_yay()
     configure_yay()
 
+def create_std_dir():
+    std_dir = [
+        "Downloads",
+        "Pictures",
+        "Videos",
+    ]
+    home = Path.home()
+    try:
+        for name in std_dir:
+            (home / name).mkdir(exist_ok=True)
+        result = 0
+    except Exception:
+        result = 1
+    if result != 0:
+        print(f'std dir: FAILED')
+    else:
+        print(f'std dir: OK')
+
 # start programm
 def main():
     install_pkg(std_pkg)
@@ -239,6 +260,8 @@ def main():
     install_yay_pkg(yay_list_pkg)
 
     #install_pkg(nvidia_pkg)
+
+    create_std_dir()
 
 if __name__ == '__main__':
     main()
