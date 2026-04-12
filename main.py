@@ -52,6 +52,8 @@ std_pkg = [
 
     # wallpaper
     "feh",
+    "xorg-xrandr",
+    "mpv",
 
     # compositor
     "picom",
@@ -124,6 +126,8 @@ yay_list_pkg = [
 
 #    # launcher
 #    'eww',
+    # wallpaper
+    "xwinwrap-git",
 ]
 
 work_and_home_pkg = [
