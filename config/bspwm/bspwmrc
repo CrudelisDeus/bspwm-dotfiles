@@ -17,12 +17,6 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 picom --config ~/.config/picom/picom.conf &
 # --------------
 
-# ---bar
-killall -q polybar
-while pgrep -x polybar >/dev/null; do sleep 0.5; done
-polybar main &
-# ------
-
 # ---copylist
 greenclip daemon &
 # -----------
@@ -36,8 +30,41 @@ setxkbmap -layout us,ru -option grp:alt_shift_toggle &
 # -------------------------------------
 
 # ---monitor
-bspc monitor -d 1 2 3 4 5 6
+sleep 2
+
+PRIMARY="$(xrandr --query | awk '/ primary/ {print $1; exit}')"
+MONITORS="$(bspc query -M --names)"
+
+if [ -n "$PRIMARY" ] && printf '%s\n' "$MONITORS" | grep -qx "$PRIMARY"; then
+  ORDERED="$(printf '%s\n' "$PRIMARY" $(printf '%s\n' "$MONITORS" | grep -vx "$PRIMARY"))"
+  bspc wm -O $(printf '%s ' $ORDERED)
+else
+  ORDERED="$MONITORS"
+fi
+
+COUNT="$(printf '%s\n' $ORDERED | sed '/^$/d' | wc -l)"
+
+if [ "$COUNT" -eq 1 ]; then
+  mon="$(printf '%s\n' "$ORDERED" | head -n1)"
+  bspc monitor "$mon" -d 1 2 3 4 5 6
+else
+  start=1
+  printf '%s\n' "$ORDERED" | while IFS= read -r mon; do
+    [ -z "$mon" ] && continue
+    bspc monitor "$mon" -d "$start" "$((start + 1))" "$((start + 2))"
+    start=$((start + 3))
+  done
+fi
 # ----------
+
+# ---bar
+killall -q polybar
+while pgrep -x polybar >/dev/null; do sleep 0.5; done
+
+for m in $(polybar --list-monitors | cut -d: -f1); do
+  MONITOR="$m" polybar main &
+done
+# ------
 
 # --- theme ------------------------------
 bspc config border_width 2
