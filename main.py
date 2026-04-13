@@ -115,6 +115,9 @@ std_pkg = [
     # theme
     "dconf",
     "gsettings-desktop-schemas",
+
+    "udisks2",
+    "udiskie",
 ]
 
 yay_pkg = [
