@@ -11,9 +11,39 @@ from pathlib import Path
 import re
 import subprocess
 
+# COLORS
+# <==============================
 MAIN = '#329DA4'
 #MAIN = '#4c394e'
+
 RESET = "\033[0m"
+# <==============================
+
+
+def hex_to_rgb(hex_color: str) -> tuple[int, int, int]:
+    hex_color = hex_color.lstrip("#")
+    return tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+
+def hex_to_fastfetch(hex_color: str) -> str:
+    r, g, b = hex_to_rgb(hex_color)
+    return f"38;2;{r};{g};{b}"
+
+def change_fastfetch() -> bool:
+    try:
+        path = Path.home() / ".config/fastfetch/config.jsonc"
+        text = path.read_text()
+
+        ansi = hex_to_fastfetch(MAIN)
+
+        text = re.sub(r'("keys"\s*:\s*")([^"]+)(")', rf'\g<1>{ansi}\g<3>', text)
+        text = re.sub(r'("title"\s*:\s*")([^"]+)(")', rf'\g<1>{ansi}\g<3>', text)
+
+        path.write_text(text)
+        return True
+
+    except Exception as e:
+        print(f"fastfetch error: {e}")
+        return False
 
 def hex_to_ansi(hex_color: str) -> str:
     hex_color = hex_color.lstrip("#")
@@ -104,25 +134,32 @@ def change_bspwmrc() -> bool:
 
 # start program
 def main():
+
+    # MAIN COLOR
     if change_bspwmrc():
-        print("OK: bspwmrc select color")
+        print("OK: MAIN bspwmrc select color")
     else:
-        print("FAILED: bspwmrc select color")
+        print("FAILED: MAIN bspwmrc select color")
 
     if change_polybar():
-        print("OK: polybar primary")
+        print("OK: MAIN polybar primary")
     else:
-        print("FAILED: polybar primary")
+        print("FAILED: MAIN polybar primary")
 
     if change_rofi():
-        print("OK: rofi main color")
+        print("OK: MAIN rofi color")
     else:
-        print("FAILED: rofi main color")
+        print("FAILED: MAIN rofi color")
 
     if change_dunst():
-        print("OK: dunst frame_color")
+        print("OK: MAIN dunst frame_color")
     else:
-        print("FAILED: dunst frame_color")
+        print("FAILED: MAIN dunst frame_color")
+
+    if change_fastfetch():
+        print("OK: MAIN fastfetch colors")
+    else:
+        print("FAILED: MAIN fastfetch colors")
 
     reload_dunst()
     reload_bspwm()
