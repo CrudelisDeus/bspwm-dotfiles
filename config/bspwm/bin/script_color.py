@@ -16,6 +16,9 @@ import subprocess
 MAIN = '#329DA4'
 #MAIN = '#4c394e'
 
+COLOR_FONT = "#6B1112"
+#COLOR_FONT = "#ffffff"
+
 RESET = "\033[0m"
 # <==============================
 
@@ -33,10 +36,19 @@ def change_fastfetch() -> bool:
         path = Path.home() / ".config/fastfetch/config.jsonc"
         text = path.read_text()
 
-        ansi = hex_to_fastfetch(MAIN)
+        ansi_main = hex_to_fastfetch(MAIN)
+        ansi_font = hex_to_fastfetch(COLOR_FONT)
 
-        text = re.sub(r'("keys"\s*:\s*")([^"]+)(")', rf'\g<1>{ansi}\g<3>', text)
-        text = re.sub(r'("title"\s*:\s*")([^"]+)(")', rf'\g<1>{ansi}\g<3>', text)
+        text = re.sub(r'("keys"\s*:\s*")([^"]+)(")', rf'\g<1>{ansi_main}\g<3>', text)
+        text = re.sub(r'("title"\s*:\s*")([^"]+)(")', rf'\g<1>{ansi_main}\g<3>', text)
+
+        text = re.sub(r'("output"\s*:\s*")([^"]+)(")', rf'\g<1>{ansi_font}\g<3>', text)
+
+        text = re.sub(r'("green"\s*:\s*")([^"]+)(")', rf'\g<1>{ansi_font}\g<3>', text)
+        text = re.sub(r'("yellow"\s*:\s*")([^"]+)(")', rf'\g<1>{ansi_font}\g<3>', text)
+        text = re.sub(r'("red"\s*:\s*")([^"]+)(")', rf'\g<1>{ansi_font}\g<3>', text)
+
+        text = re.sub(r'("output"\s*:\s*")([^"]+)(")', rf'\g<1>{ansi_font}\g<3>', text)
 
         path.write_text(text)
         return True
