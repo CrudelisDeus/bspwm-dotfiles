@@ -30,6 +30,8 @@ COLOR_BACKGROUND = "#000000"
 RESET = "\033[0m"
 # <==============================
 
+def hex_to_i3lock(hex_color: str) -> str:
+    return hex_color.lstrip("#") + "FF"
 
 def hex_to_rgb(hex_color: str) -> tuple[int, int, int]:
     hex_color = hex_color.lstrip("#")

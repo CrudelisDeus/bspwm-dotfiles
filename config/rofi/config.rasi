@@ -11,6 +11,8 @@ window {
     background-color: @bg;
     width: 800px;
     height: 300px;
+/*    border: 1px;
+    border-color: @main; */
 }
 
 prompt {
