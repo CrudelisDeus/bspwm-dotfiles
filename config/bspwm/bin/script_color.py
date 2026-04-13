@@ -16,8 +16,10 @@ import subprocess
 MAIN = '#329DA4'
 #MAIN = '#4c394e'
 
-COLOR_FONT = "#6B1112"
-#COLOR_FONT = "#ffffff"
+# color (TEXT)
+#  #C5C8C6
+#COLOR_FOREGROUND = "#6B1112"
+COLOR_FOREGROUND = "#ffffff"
 
 RESET = "\033[0m"
 # <==============================
@@ -37,7 +39,7 @@ def change_fastfetch() -> bool:
         text = path.read_text()
 
         ansi_main = hex_to_fastfetch(MAIN)
-        ansi_font = hex_to_fastfetch(COLOR_FONT)
+        ansi_font = hex_to_fastfetch(COLOR_FOREGROUND)
 
         text = re.sub(r'("keys"\s*:\s*")([^"]+)(")', rf'\g<1>{ansi_main}\g<3>', text)
         text = re.sub(r'("title"\s*:\s*")([^"]+)(")', rf'\g<1>{ansi_main}\g<3>', text)
@@ -109,17 +111,25 @@ def change_rofi() -> bool:
         return False
 
 def change_polybar() -> bool:
-    # change primary color
     try:
         path = Path.home() / ".config/polybar/config.ini"
         text = path.read_text()
 
-        pattern = r'(primary\s*=\s*)(.+)'
+        match = re.search(r'(?ms)(^\[colors\]\n.*?)(?=^\[|\Z)', text)
+        if not match:
+            return False
 
-        if re.search(pattern, text):
-            text = re.sub(pattern, rf'\1{MAIN}', text)
-        else:
-            text += f'\nprimary = {MAIN}\n'
+        colors_block = match.group(1)
+
+        colors_block = re.sub(r'(?m)^(primary\s*=\s*).*$',
+                              rf'\1{MAIN}',
+                              colors_block)
+
+        colors_block = re.sub(r'(?m)^(foreground\s*=\s*).*$',
+                              rf'\1{COLOR_FOREGROUND}',
+                              colors_block)
+
+        text = text[:match.start(1)] + colors_block + text[match.end(1):]
 
         path.write_text(text)
         return True
@@ -154,9 +164,9 @@ def main():
         print("FAILED: MAIN bspwmrc select color")
 
     if change_polybar():
-        print("OK: MAIN polybar primary")
+        print("OK: MAIN and FOREGROUND polybar primary")
     else:
-        print("FAILED: MAIN polybar primary")
+        print("FAILED: MAIN and FOREGROUND polybar primary")
 
     if change_rofi():
         print("OK: MAIN rofi color")
@@ -169,9 +179,9 @@ def main():
         print("FAILED: MAIN dunst frame_color")
 
     if change_fastfetch():
-        print("OK: MAIN fastfetch colors")
+        print("OK: MAIN and FOREGROUND fastfetch colors")
     else:
-        print("FAILED: MAIN fastfetch colors")
+        print("FAILED: MAIN and FOREGROUND fastfetch colors")
 
     reload_dunst()
     reload_bspwm()
