@@ -371,11 +371,25 @@ def run_step(name: str, func) -> None:
         if not ask_yes_no("Failed. Retry? (y/n): "):
             return
 
+def logo() -> None:
+    logo = r"""       _ /\      /\ _
+      / X  \.--./  X \
+     /_/ \/`    `\/ \_\
+    /|(`-/\_/)(\_/\-`)|\
+   ( |` (_(.oOOo.)_) `| )
+   ` |  `//\(  )/\\`  | `
+     (  // ()\/() \\  )
+      ` (   \   /   ) `
+         \         /
+          `       `"""
+    print(logo)
 
 def main() -> None:
     os.system("clear")
 
-    if not ask_yes_no("Do you want to install DeusOS? (y/n)\n"):
+    logo()
+
+    if not ask_yes_no("\nDo you want to install karakurtOS? (y/n): "):
         return
 
     run_step("Install std packages", lambda: install_pkg(std_pkg))
@@ -386,17 +400,20 @@ def main() -> None:
     input("\nPress Enter...")
 
     os.system("clear")
-    if ask_yes_no("Do you want to install work and home packages? (y/n)\n"):
+    logo()
+    if ask_yes_no("\nDo you want to install work and home packages? (y/n): "):
         run_step("Install work and home packages", lambda: install_pkg(work_and_home_pkg))
         input("\nPress Enter...")
 
     os.system("clear")
-    if ask_yes_no("Do you want to install NVIDIA drivers? (y/n)\n"):
+    logo()
+    if ask_yes_no("\nDo you want to install NVIDIA drivers? (y/n): "):
         run_step("Install NVIDIA", lambda: install_pkg(nvidia_pkg))
         input("\nPress Enter...")
 
     os.system("clear")
-    if ask_yes_no("Do you want to set up the firewall? (y/n)\n"):
+    logo()
+    if ask_yes_no("\nDo you want to set up the firewall? (y/n): "):
         run_step("Setup firewall", setup_firewall)
         input("\nPress Enter...")
 
