@@ -18,10 +18,14 @@ MAIN = '#329DA4'
 
 # POLYBAR title 
 COLOR_SECONDARY_TEXT = "#C5C8C6"
+#COLOR_SECONDARY_TEXT = "#6B1112"
 
 # color (TEXT)
 #COLOR_FOREGROUND = "#6B1112"
 COLOR_FOREGROUND = "#ffffff"
+
+# background rofi
+COLOR_BACKGROUND = "#000000"
 
 RESET = "\033[0m"
 # <==============================
@@ -96,16 +100,37 @@ def change_dunst() -> bool:
         return False
 
 def change_rofi() -> bool:
-    # change main color 
     try:
         path = Path.home() / ".config/rofi/config.rasi"
         text = path.read_text()
 
-        pattern = r'(main:\s*)(#[0-9a-fA-F]{6})'
-        if re.search(pattern, text):
-            text = re.sub(pattern, rf'\1{MAIN}', text)
-        else:
-            text = '* {\n    main: ' + MAIN + ';\n}\n\n' + text
+        match = re.search(r'(?ms)(^\*\s*\{.*?^\})', text)
+        if not match:
+            return False
+
+        block = match.group(1)
+
+        block = re.sub(r'(?m)^(    main:\s*)(#[0-9a-fA-F]{6})(;?)$',
+                       rf'\1{MAIN}\3',
+                       block)
+
+        block = re.sub(r'(?m)^(    bg:\s*)(#[0-9a-fA-F]{6})(;?)$',
+                       rf'\1{COLOR_BACKGROUND}\3',
+                       block)
+
+        block = re.sub(r'(?m)^(    bg-alt:\s*)(#[0-9a-fA-F]{6})(;?)$',
+                       rf'\1{COLOR_BACKGROUND}\3',
+                       block)
+
+        block = re.sub(r'(?m)^(    fg:\s*)(#[0-9a-fA-F]{6})(;?)$',
+                       rf'\1{COLOR_FOREGROUND}\3',
+                       block)
+
+        block = re.sub(r'(?m)^(    secondary-text:\s*)(#[0-9a-fA-F]{6})(;?)$',
+                       rf'\1{COLOR_SECONDARY_TEXT}\3',
+                       block)
+
+        text = text[:match.start(1)] + block + text[match.end(1):]
 
         path.write_text(text)
         return True

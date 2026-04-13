@@ -4,7 +4,7 @@
     bg: #000000;
     fg: #ffffff;
     bg-alt: #000000;
-    secondary-text: #6B1112;
+    secondary-text: #C5C8C6;
 }
 
 window {
