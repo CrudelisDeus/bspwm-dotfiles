@@ -116,8 +116,16 @@ std_pkg = [
     "dconf",
     "gsettings-desktop-schemas",
 
+    # usb
     "udisks2",
     "udiskie",
+    "ntfs-3g",
+    "exfatprogs",
+    "gvfs",
+    "gvfs-mtp",
+
+    # network
+    "networkmanager",
 ]
 
 yay_pkg = [
@@ -152,6 +160,21 @@ firewall_pkg = [
     "ufw",
 ]
 
+def enable_networkmanager() -> bool:
+    try:
+        subprocess.run(
+            ["sudo", "systemctl", "enable", "--now", "NetworkManager"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        print("NetworkManager: OK")
+        return True
+    except subprocess.CalledProcessError as e:
+        print("NetworkManager: FAILED")
+        if e.stderr:
+            print(e.stderr.strip())
+        return False
 
 def ask_yes_no(prompt: str) -> bool:
     answer = input(prompt).strip().lower()
@@ -359,6 +382,7 @@ def main() -> None:
     run_step("Install yay", install_yay)
     run_step("Install yay packages", lambda: install_yay_pkg(yay_list_pkg))
     run_step("Create standard dirs", create_std_dir)
+    run_step("Enable NetworkManager", enable_networkmanager)
     input("\nPress Enter...")
 
     os.system("clear")
