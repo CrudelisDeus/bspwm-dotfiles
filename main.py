@@ -242,6 +242,7 @@ def create_std_dir():
         "Downloads",
         "Pictures",
         "Videos",
+        "projects",
     ]
     home = Path.home()
     try:
