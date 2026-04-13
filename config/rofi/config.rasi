@@ -3,7 +3,8 @@
     main: #329DA4;
     bg: #000000;
     fg: #ffffff;
-    bg-alt: #111111;
+    bg-alt: #000000;
+    secondary-text: #6B1112;
 }
 
 window {
@@ -23,6 +24,7 @@ textbox-prompt-colon {
 entry {
     text-color: @fg;
     cursor-width: 0px;
+
 }
 
 element-text {
@@ -68,3 +70,20 @@ listview {
     background-color: @bg;
 }
 
+entry {
+    placeholder-color: @secondary-text;
+}
+
+num-rows {
+    text-color: @secondary-text;
+}
+
+num-filtered-rows {
+    text-color: @secondary-text;
+}
+
+textbox-num-sep {
+    text-color: @secondary-text;
+    expand: false;
+    str: "/";
+}

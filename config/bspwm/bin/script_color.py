@@ -16,8 +16,10 @@ import subprocess
 MAIN = '#329DA4'
 #MAIN = '#4c394e'
 
+# POLYBAR title 
+COLOR_SECONDARY_TEXT = "#C5C8C6"
+
 # color (TEXT)
-#  #C5C8C6
 #COLOR_FOREGROUND = "#6B1112"
 COLOR_FOREGROUND = "#ffffff"
 
@@ -126,7 +128,7 @@ def change_polybar() -> bool:
                               colors_block)
 
         colors_block = re.sub(r'(?m)^(foreground\s*=\s*).*$',
-                              rf'\1{COLOR_FOREGROUND}',
+                              rf'\1{COLOR_SECONDARY_TEXT}',
                               colors_block)
 
         text = text[:match.start(1)] + colors_block + text[match.end(1):]
