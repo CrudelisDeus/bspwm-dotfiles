@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 import subprocess
 from custom_script_about_author import print_image
@@ -29,7 +29,7 @@ def main() -> None:
     print_under_image(f"{c('karakurtOS')}\nWelcome,{username}")
     print_info()
 
-    input("\nPress Enter to exit...")
+    input("Press Enter to exit...")
 
 if __name__ == "__main__":
     main()

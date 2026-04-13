@@ -10,6 +10,10 @@ super + Return
 super + space
      ~/.config/bspwm/bin/rofi_app_menu.py
 
+# custom scripts
+super + d
+     ~/.config/bspwm/bin/rofi_custom_script.py
+
 # screenshot
 Print
     flameshot gui
