@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 
+import os
+import shutil
 import subprocess
 from pathlib import Path
+
 
 # pkg
 std_pkg = [
@@ -31,6 +34,7 @@ std_pkg = [
     # xorg
     "xorg-xinit",
     "xorg",
+
     # bspwm
     "bspwm",
     "sxhkd",
@@ -93,7 +97,6 @@ std_pkg = [
     "pipewire-pulse",
     "wireplumber",
     "alsa-utils",
-    "mpv",
 
     # screenshot
     "flameshot",
@@ -109,27 +112,19 @@ std_pkg = [
     "reflector",
     "pacman-contrib",
 
-    # change default theme (dark or light)
-    "gsettings",
+    # theme
     "dconf",
     "gsettings-desktop-schemas",
 ]
 
 yay_pkg = [
-    'base-devel',
-    'git',
+    "base-devel",
+    "git",
 ]
 
 yay_list_pkg = [
-    # clip hisrory
-    'greenclip',
-
-    # lockscreen
-    'i3lock-color',
-
-#    # launcher
-#    'eww',
-    # wallpaper
+    "greenclip",
+    "i3lock-color",
     "xwinwrap-git",
 ]
 
@@ -139,105 +134,128 @@ work_and_home_pkg = [
     "anki",
     "obsidian",
     "obs-studio",
-    # for anki TTS
     "speech-dispatcher",
-    "espeak-ng"
+    "espeak-ng",
 ]
 
 nvidia_pkg = [
-    'nvidia-dkms',
-    'nvidia-utils',
-    'nvidia-settings',
-    'linux-headers',
+    "nvidia-dkms",
+    "nvidia-utils",
+    "nvidia-settings",
+    "linux-headers",
 ]
 
 firewall_pkg = [
-    'ufw',
+    "ufw",
 ]
 
-def install_pkg(pkgs: list) -> None:
+
+def ask_yes_no(prompt: str) -> bool:
+    answer = input(prompt).strip().lower()
+    return answer in ("y", "yes")
+
+
+def install_pkg(pkgs: list[str]) -> bool:
     for pkg in pkgs:
         try:
             subprocess.run(
-                ['sudo', 'pacman', '-S', pkg, '--noconfirm'],
+                ["sudo", "pacman", "-S", pkg, "--noconfirm", "--needed"],
                 check=True,
                 capture_output=True,
-                text=True
+                text=True,
             )
-            result = 0
-        except Exception:
-            result = 1
+            print(f"pkg OK: {pkg}")
+        except subprocess.CalledProcessError as e:
+            print(f"pkg FAILED: {pkg}")
+            if e.stderr:
+                print(e.stderr.strip())
+            return False
 
-        if result != 0:
-            print(f'pkg FAILED: {pkg}')
-        else:
-            print(f'pkg OK: {pkg}')
+    return True
 
-# yay install
-def clone_yay():
+
+def clone_yay() -> bool:
+    yay_dir = Path("/tmp/yay")
+
     try:
+        if yay_dir.exists():
+            shutil.rmtree(yay_dir)
+
         subprocess.run(
             [
-                'git',
-                'clone',
-                'https://aur.archlinux.org/yay.git',
-                '/tmp/yay'
+                "git",
+                "clone",
+                "https://aur.archlinux.org/yay.git",
+                str(yay_dir),
             ],
             check=True,
             capture_output=True,
-            text=True
+            text=True,
         )
-        result = 0
-    except Exception:
-        result = 1
+        print("yay OK: clone")
+        return True
+    except subprocess.CalledProcessError as e:
+        print("yay FAILED: clone")
+        if e.stderr:
+            print(e.stderr.strip())
+        return False
 
-    if result != 0:
-        print(f'yay FAILED: clone')
-    else:
-        print(f'yay OK: clone')
 
-def configure_yay():
+def configure_yay() -> bool:
     try:
         subprocess.run(
-            ['makepkg', '-si', '--noconfirm'],
+            ["makepkg", "-si", "--noconfirm"],
             check=True,
-            text=True,
-            cwd='/tmp/yay',
+            cwd="/tmp/yay",
             capture_output=True,
+            text=True,
         )
-        result = 0
-    except Exception:
-        result = 1
+        print("yay OK: configure")
+        return True
+    except subprocess.CalledProcessError as e:
+        print("yay FAILED: configure")
+        if e.stderr:
+            print(e.stderr.strip())
+        return False
 
-    if result != 0:
-        print(f'yay FAILED: configure')
-    else:
-        print(f'yay OK: configure')
 
-def install_yay_pkg(pkgs: list) -> None:
+def install_yay_pkg(pkgs: list[str]) -> bool:
     for pkg in pkgs:
         try:
             subprocess.run(
-                ['yay', '-S', pkg, '--noconfirm', '--needed'],
+                ["yay", "-S", pkg, "--noconfirm", "--needed"],
                 check=True,
                 capture_output=True,
-                text=True
+                text=True,
             )
-            result = 0
-        except Exception:
-            result = 1
+            print(f"yay pkg OK: {pkg}")
+        except subprocess.CalledProcessError as e:
+            print(f"yay pkg FAILED: {pkg}")
+            if e.stderr:
+                print(e.stderr.strip())
+            return False
 
-        if result != 0:
-            print(f'yay pkg FAILED: {pkg}')
-        else:
-            print(f'yay pkg OK: {pkg}')
+    return True
 
-def install_yay():
-    install_pkg(yay_pkg)
-    clone_yay()
-    configure_yay()
 
-def create_std_dir():
+def install_yay() -> bool:
+    if shutil.which("yay"):
+        print("yay OK: already installed")
+        return True
+
+    if not install_pkg(yay_pkg):
+        return False
+
+    if not clone_yay():
+        return False
+
+    if not configure_yay():
+        return False
+
+    return True
+
+
+def create_std_dir() -> bool:
     std_dir = [
         "Downloads",
         "Pictures",
@@ -245,81 +263,117 @@ def create_std_dir():
         "projects",
     ]
     home = Path.home()
+
     try:
         for name in std_dir:
             (home / name).mkdir(exist_ok=True)
-        result = 0
-    except Exception:
-        result = 1
-    if result != 0:
-        print(f'std dir: FAILED')
-    else:
-        print(f'std dir: OK')
 
-def enable_firewall():
+        print("std dir: OK")
+        return True
+    except Exception as e:
+        print("std dir: FAILED")
+        print(str(e))
+        return False
+
+
+def enable_firewall() -> bool:
     try:
         subprocess.run(
             ["sudo", "ufw", "--force", "enable"],
             check=True,
             capture_output=True,
-            text=True
+            text=True,
         )
         subprocess.run(
             ["sudo", "systemctl", "enable", "ufw"],
             check=True,
             capture_output=True,
-            text=True
+            text=True,
         )
-        result = 0
-    except Exception:
-        result = 1
-
-    if result != 0:
-        print("ufw start: FAILED")
-    else:
         print("ufw start: OK")
+        return True
+    except subprocess.CalledProcessError as e:
+        print("ufw start: FAILED")
+        if e.stderr:
+            print(e.stderr.strip())
+        return False
 
-def create_std_rule_firewall():
+
+def create_std_rule_firewall() -> bool:
     try:
         subprocess.run(
             ["sudo", "ufw", "default", "deny", "incoming"],
             check=True,
             capture_output=True,
-            text=True
+            text=True,
         )
         subprocess.run(
             ["sudo", "ufw", "default", "allow", "outgoing"],
             check=True,
             capture_output=True,
-            text=True
+            text=True,
         )
-        result = 0
-    except Exception:
-        result = 1
+        print("ufw rule: OK")
+        return True
+    except subprocess.CalledProcessError as e:
+        print("ufw rule: FAILED")
+        if e.stderr:
+            print(e.stderr.strip())
+        return False
 
-    if result != 0:
-        print(f'ufw rule: FAILED')
-    else:
-        print(f'ufw rule: OK')
 
-def setup_firewall():
-    install_pkg(firewall_pkg)
-    create_std_rule_firewall()
-    enable_firewall()
+def setup_firewall() -> bool:
+    if not install_pkg(firewall_pkg):
+        return False
 
-# start programm
-def main():
-    install_pkg(std_pkg)
-    install_pkg(work_and_home_pkg)
+    if not create_std_rule_firewall():
+        return False
 
-    install_yay()
-    install_yay_pkg(yay_list_pkg)
+    if not enable_firewall():
+        return False
 
-    #install_pkg(nvidia_pkg)
+    return True
 
-    create_std_dir()
 
-    setup_firewall()
+def run_step(name: str, func) -> None:
+    while True:
+        print(f"\n== {name} ==")
 
-if __name__ == '__main__':
+        if func():
+            return
+
+        if not ask_yes_no("Failed. Retry? (y/n): "):
+            return
+
+
+def main() -> None:
+    os.system("clear")
+
+    if not ask_yes_no("Do you want to install DeusOS? (y/n)\n"):
+        return
+
+    run_step("Install std packages", lambda: install_pkg(std_pkg))
+    run_step("Install yay", install_yay)
+    run_step("Install yay packages", lambda: install_yay_pkg(yay_list_pkg))
+    run_step("Create standard dirs", create_std_dir)
+    input("\nPress Enter...")
+
+    os.system("clear")
+    if ask_yes_no("Do you want to install work and home packages? (y/n)\n"):
+        run_step("Install work and home packages", lambda: install_pkg(work_and_home_pkg))
+        input("\nPress Enter...")
+
+    os.system("clear")
+    if ask_yes_no("Do you want to install NVIDIA drivers? (y/n)\n"):
+        run_step("Install NVIDIA", lambda: install_pkg(nvidia_pkg))
+        input("\nPress Enter...")
+
+    os.system("clear")
+    if ask_yes_no("Do you want to set up the firewall? (y/n)\n"):
+        run_step("Setup firewall", setup_firewall)
+        input("\nPress Enter...")
+
+    os.system('clear')
+
+if __name__ == "__main__":
     main()
