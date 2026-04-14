@@ -1,22 +1,46 @@
 #!/usr/bin/env python3
 
+from pathlib import Path
 import subprocess
 import shutil
 
+IMAGE_PATH = Path.home() / ".config" / "bspwm" / "wallpaper" / "rofi" / "custom_script_update.png"
 
-def run(cmd):
+def print_image(path: Path) -> None:
+    if not path.exists():
+        print(f"[image not found: {path}]")
+        return
+
+    if shutil.which("chafa") is None:
+        print("[chafa not installed]")
+        return
+
+    try:
+        subprocess.run(
+            [
+                "chafa",
+                str(path),
+                "--size=40x20",
+            ],
+            check=True,
+        )
+    except subprocess.CalledProcessError:
+        print("[failed to render image]")
+
+
+def run(cmd) -> int:
     return subprocess.call(cmd)
 
 
-def ask(q):
+def ask(q: str) -> bool:
     return input(f"{q} [y/N]: ").strip().lower() in ("y", "yes")
 
 
-def has(cmd):
+def has(cmd: str) -> bool:
     return shutil.which(cmd) is not None
 
 
-def update_mirrors():
+def update_mirrors() -> None:
     if not has("reflector"):
         print("reflector not installed (skip)")
         return
@@ -27,12 +51,11 @@ def update_mirrors():
         "sudo", "reflector",
         "--latest", "10",
         "--sort", "rate",
-        "--save", "/etc/pacman.d/mirrorlist"
+        "--save", "/etc/pacman.d/mirrorlist",
     ])
 
 
-# --- CHECK UPDATES ---
-def check_updates():
+def check_updates() -> list[str]:
     if not has("checkupdates"):
         print("Install pacman-contrib")
         return []
@@ -40,40 +63,36 @@ def check_updates():
     result = subprocess.run(
         ["checkupdates"],
         capture_output=True,
-        text=True
+        text=True,
     )
 
-    return [l for l in result.stdout.splitlines() if l.strip()]
+    return [line for line in result.stdout.splitlines() if line.strip()]
 
 
-# --- UPGRADE ---
-def upgrade():
+def upgrade() -> None:
     print("\nUpgrading system...\n")
     run(["sudo", "pacman", "-Syu"])
 
 
-# --- MAIN FLOW ---
-def main():
-    # 1. mirrors
+def main() -> None:
+    print_image(IMAGE_PATH)
+
     if ask("Update mirrors?"):
         update_mirrors()
 
-    # 2. check
     updates = check_updates()
     count = len(updates)
 
     print(f"\nFound {count} updates\n")
 
     if count > 0:
-        for u in updates:
-            print(u)
+        for update in updates:
+            print(update)
 
-    # 3. upgrade
     if count > 0 and ask("\nUpgrade system?"):
         upgrade()
     else:
         print("\nDone.")
-
 
     input("\nPress Enter to exit...")
 
