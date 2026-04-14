@@ -392,7 +392,6 @@ def log_step(ok: bool, action: str, src: str, dst: str = "") -> None:
     else:
         print(f"{status} -> {action}: {src}")
 
-
 def setup_user_files() -> bool:
     BASE_DIR = Path(__file__).resolve().parent
 
@@ -402,10 +401,22 @@ def setup_user_files() -> bool:
     HOME_DIR = Path.home()
     HOME_CONFIG = HOME_DIR / ".config"
 
+    ALLOWED_CONFIGS = {
+        "bspwm",
+        "dunst",
+        "fastfetch",
+        "kitty",
+        "nvim",
+        "picom",
+        "polybar",
+        "rofi",
+        "speech-dispatcher",
+        "sxhkd",
+        "yazi",
+    }
+
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     BACKUP_ROOT = Path("/tmp") / f"backup_dotfiles_{timestamp}"
-    BACKUP_CONFIG = BACKUP_ROOT / ".config"
-    BACKUP_HOME = BACKUP_ROOT / "home"
 
     try:
         if not SRC_CONFIG.exists():
@@ -419,42 +430,40 @@ def setup_user_files() -> bool:
         BACKUP_ROOT.mkdir(parents=True, exist_ok=True)
         log_step(True, "create dir", str(BACKUP_ROOT))
 
-        if HOME_CONFIG.exists():
-            shutil.copytree(HOME_CONFIG, BACKUP_CONFIG)
-            log_step(True, "backup", str(HOME_CONFIG), str(BACKUP_CONFIG))
+        def backup_path(dst: Path) -> Path:
+            return BACKUP_ROOT / dst.relative_to(HOME_DIR)
 
-            shutil.rmtree(HOME_CONFIG)
-            log_step(True, "remove", str(HOME_CONFIG))
+        def backup_and_remove(dst: Path) -> None:
+            bkp = backup_path(dst)
+            bkp.parent.mkdir(parents=True, exist_ok=True)
 
-        BACKUP_HOME.mkdir(parents=True, exist_ok=True)
-        log_step(True, "create dir", str(BACKUP_HOME))
+            if dst.is_symlink() or dst.is_file():
+                shutil.copy2(dst, bkp)
+                log_step(True, "backup", str(dst), str(bkp))
+                dst.unlink()
+                log_step(True, "remove", str(dst))
 
-        for item in SRC_HOME.iterdir():
-            dst = HOME_DIR / item.name
-            backup_dst = BACKUP_HOME / item.name
-
-            if dst.exists() or dst.is_symlink():
-                if dst.is_dir() and not dst.is_symlink():
-                    shutil.copytree(dst, backup_dst)
-                    log_step(True, "backup", str(dst), str(backup_dst))
-
-                    shutil.rmtree(dst)
-                    log_step(True, "remove", str(dst))
-                else:
-                    shutil.copy2(dst, backup_dst)
-                    log_step(True, "backup", str(dst), str(backup_dst))
-
-                    dst.unlink()
-                    log_step(True, "remove", str(dst))
+            elif dst.is_dir():
+                shutil.copytree(dst, bkp, dirs_exist_ok=True)
+                log_step(True, "backup", str(dst), str(bkp))
+                shutil.rmtree(dst)
+                log_step(True, "remove", str(dst))
 
         HOME_CONFIG.mkdir(parents=True, exist_ok=True)
         log_step(True, "create dir", str(HOME_CONFIG))
 
         for item in SRC_CONFIG.iterdir():
+            if item.name not in ALLOWED_CONFIGS:
+                print(f"SKIP config: {item.name}")
+                continue
+
             dst = HOME_CONFIG / item.name
 
+            if dst.exists() or dst.is_symlink():
+                backup_and_remove(dst)
+
             if item.is_dir():
-                shutil.copytree(item, dst, dirs_exist_ok=True)
+                shutil.copytree(item, dst)
             else:
                 shutil.copy2(item, dst)
 
@@ -462,6 +471,9 @@ def setup_user_files() -> bool:
 
         for item in SRC_HOME.iterdir():
             dst = HOME_DIR / item.name
+
+            if dst.exists() or dst.is_symlink():
+                backup_and_remove(dst)
 
             if item.is_dir():
                 shutil.copytree(item, dst, dirs_exist_ok=True)
