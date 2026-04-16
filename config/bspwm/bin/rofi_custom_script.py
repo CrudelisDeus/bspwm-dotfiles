@@ -19,6 +19,7 @@ def main():
 
     options = [
     "Run workspace",
+    "Download project",
     "Check system",
     "Update system",
     f"Toggle theme",
@@ -45,6 +46,11 @@ def main():
         subprocess.Popen([
             "kitty", "-e", "python",
             os.path.expanduser("~/.config/bspwm/bin/custom_script_about_author.py")
+        ])
+    elif choice == "Download project":
+        subprocess.Popen([
+            "kitty", "-e", "python",
+            os.path.expanduser("~/.config/bspwm/bin/custom_script_download_project.py")
         ])
 
 
