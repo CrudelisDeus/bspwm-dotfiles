@@ -2,6 +2,9 @@
 
 import subprocess
 import os
+from pathlib import Path
+
+IMAGE_PATH = Path.home() / ".config" / "bspwm" / "wallpaper" / "rofi" / "custom_script_checks.png"
 
 process_list = [
     'bspwm',
@@ -21,6 +24,23 @@ env_list = [
         "var": "DBUS_SESSION_BUS_ADDRESS"
     }
 ]
+
+def print_image(path: Path) -> None:
+    if not path.exists():
+        print(f"[image not found: {path}]")
+        return
+
+    try:
+        subprocess.run(
+            [
+                "chafa",
+                str(path),
+                "--size=40x20",
+            ],
+            check=True
+        )
+    except Exception:
+        print("[failed to render image]")
 
 def check_firewall() -> None:
     result = subprocess.run(
@@ -56,6 +76,8 @@ def check_env_list() -> None:
         print(f'env {status}: {e["name"]}')
 
 def main() -> None:
+    print_image(IMAGE_PATH)
+    print()
     check_process_list()
     check_env_list()
     #check_firewall()

@@ -1,15 +1,16 @@
 #!/usr/bin/python
 
-#   / _ \
-# \_\(_)/_/  github: CrudelisDeus
-#  _//o\\_   email: karakurt.deus@gmail.com
-#   /   \
-#
-# script info: global change color
-
 from pathlib import Path
 import re
 import subprocess
+
+# GLOBAL FONT SIZE
+# <==============================
+FONT_SIZE_GLOBAL = ''
+FONT_SIZE_KITTY = '10.5'
+FONT_SIZE_POLYBAR = '10;2'
+# <==============================
+
 
 # COLORS
 # <==============================
