@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+# Wallpaper manager for bspwm (image + video support)
+# Automatically selects default background (main* or first available)
+# Applies images via feh and videos via xwinwrap + mpv (multi-monitor aware)
+
 import subprocess
 import os
 from pathlib import Path
