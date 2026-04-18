@@ -511,6 +511,86 @@ def handle_nvim_config() -> bool:
         print(str(e))
         return False
 
+def enable_multilib_if_needed() -> bool:
+    pacman_conf = Path("/etc/pacman.conf")
+
+    try:
+        content = pacman_conf.read_text(encoding="utf-8")
+
+        if "\n[multilib]\n" in content and "\nInclude = /etc/pacman.d/mirrorlist\n" in content:
+            print("multilib: OK (already enabled)")
+            return True
+
+        if not ask_yes_no("Do you want to enable multilib? (y/n): "):
+            print("multilib: SKIPPED")
+            return True
+
+        lines = content.splitlines()
+        new_lines = []
+        in_multilib_block = False
+        changed = False
+
+        for line in lines:
+            stripped = line.strip()
+
+            if stripped == "#[multilib]":
+                new_lines.append("[multilib]")
+                in_multilib_block = True
+                changed = True
+                continue
+
+            if in_multilib_block and stripped == "#Include = /etc/pacman.d/mirrorlist":
+                new_lines.append("Include = /etc/pacman.d/mirrorlist")
+                in_multilib_block = False
+                changed = True
+                continue
+
+            new_lines.append(line)
+
+        if not changed:
+            print("multilib: FAILED")
+            print("multilib block not found in /etc/pacman.conf")
+            return False
+
+        new_content = "\n".join(new_lines) + "\n"
+
+        subprocess.run(
+            ["sudo", "cp", str(pacman_conf), "/etc/pacman.conf.bak"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+
+        subprocess.run(
+            ["sudo", "tee", str(pacman_conf)],
+            input=new_content,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+
+        subprocess.run(
+            ["sudo", "pacman", "-Sy"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+
+        print("multilib: OK")
+        return True
+
+    except subprocess.CalledProcessError as e:
+        print("multilib: FAILED")
+        if e.stderr:
+            print(e.stderr.strip())
+        elif e.stdout:
+            print(e.stdout.strip())
+        return False
+    except Exception as e:
+        print("multilib: FAILED")
+        print(str(e))
+        return False
+
 def main() -> None:
     os.system("clear")
 
@@ -551,6 +631,10 @@ def main() -> None:
         input("\nPress Enter...")
 
     os.system('clear')
+
+    os.system("clear")
+    logo()
+    run_step("Enable multilib", enable_multilib_if_needed)
 
 if __name__ == "__main__":
     main()

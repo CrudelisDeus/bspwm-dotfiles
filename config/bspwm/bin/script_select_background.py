@@ -52,6 +52,7 @@ WALLPAPER_RANDOM=false
             continue
 
         k, v = line.strip().split("=", 1)
+        k = k.strip()
         v = v.strip().lower()
 
         if k == "AUTO_WALLPAPER":
@@ -64,7 +65,7 @@ WALLPAPER_RANDOM=false
             try:
                 WALLPAPER_INTERVAL_MINUTES = max(1, int(v))
             except:
-                pass
+                WALLPAPER_INTERVAL_MINUTES = 10
         elif k == "WALLPAPER_RANDOM":
             WALLPAPER_RANDOM = v in ("true", "1", "yes")
 
@@ -111,38 +112,51 @@ def get_filtered_backgrounds(files, use_only_videos, use_only_images):
     result = []
 
     for file in files:
-        t = get_file_type(file)
+        file_type = get_file_type(file)
 
-        if use_only_videos and t != "video":
-            continue
-        if use_only_images and t != "image":
+        if use_only_videos and file_type != "video":
             continue
 
-        if t in {"image", "video"}:
+        if use_only_images and file_type != "image":
+            continue
+
+        if file_type in {"image", "video"}:
             result.append(file)
 
     return result
 
 
 def get_default_background(files):
-    for f in files:
-        if f.stem.lower().startswith("main") and get_file_type(f) in {"image", "video"}:
-            return f
+    for file in files:
+        if file.stem.lower().startswith("main") and get_file_type(file) in {"image", "video"}:
+            return file
 
-    for f in files:
-        if get_file_type(f) in {"image", "video"}:
-            return f
+    for file in files:
+        if get_file_type(file) in {"image", "video"}:
+            return file
 
     return None
 
 
 def stop_video_wallpaper():
-    subprocess.run(["killall", "xwinwrap"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    subprocess.run(["killall", "mpv"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.run(
+        ["killall", "xwinwrap"],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL
+    )
+    subprocess.run(
+        ["killall", "mpv"],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL
+    )
 
 
 def get_connected_monitors():
-    result = subprocess.run(["xrandr", "--query"], capture_output=True, text=True)
+    result = subprocess.run(
+        ["xrandr", "--query"],
+        capture_output=True,
+        text=True
+    )
 
     monitors = []
 
@@ -158,18 +172,18 @@ def get_connected_monitors():
             continue
 
         resolution = geometry.split("+")[0]
-        w, h = map(int, resolution.split("x"))
+        width, height = map(int, resolution.split("x"))
 
         rest = geometry[len(resolution):]
-        off = rest.split("+")
-        x = int(off[1])
-        y = int(off[2])
+        offsets = rest.split("+")
+        x = int(offsets[1])
+        y = int(offsets[2])
 
         monitors.append({
             "name": name,
             "geometry": geometry,
-            "width": w,
-            "height": h,
+            "width": width,
+            "height": height,
             "x": x,
             "y": y,
         })
@@ -196,27 +210,52 @@ def set_image_wallpaper(path):
 def start_video_wallpaper(path):
     stop_video_wallpaper()
 
-    for m in get_connected_monitors():
-        subprocess.Popen([
-            "xwinwrap", "-g", m["geometry"], "-un", "-fdt", "-ni", "-b", "-nf", "--",
-            "mpv",
-            "--hwdec=auto",
-            "--vo=x11",
-            "--no-audio",
-            "--loop",
-            "--wid=%WID",
-            str(path)
-        ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    monitors = get_connected_monitors()
+
+    if not monitors:
+        return
+
+    for monitor in monitors:
+        subprocess.Popen(
+            [
+                "xwinwrap",
+                "-g", monitor["geometry"],
+                "-un",
+                "-fdt",
+                "-ni",
+                "-b",
+                "-nf",
+                "--",
+                "mpv",
+                "--hwdec=auto",
+                "--vo=x11",
+                "--no-audio",
+                "--no-border",
+                "--no-config",
+                "--no-window-dragging",
+                "--no-input-default-bindings",
+                "--no-osd-bar",
+                "--no-sub",
+                "--loop",
+                "--panscan=1.0",
+                "--wid=%WID",
+                str(path),
+            ],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
 
 
 def apply_background(choice):
     if not choice:
         return
 
-    if get_file_type(choice) == "image":
+    file_type = get_file_type(choice)
+
+    if file_type == "image":
         stop_video_wallpaper()
         set_image_wallpaper(choice)
-    elif get_file_type(choice) == "video":
+    elif file_type == "video":
         start_video_wallpaper(choice)
 
 
@@ -233,14 +272,21 @@ def main():
         print("No wallpapers")
         return
 
-    # --- one ---
-    if not AUTO_WALLPAPER:
-        apply_background(get_default_background(files))
+    default_choice = get_default_background(files)
+
+    if default_choice is None:
+        print("No wallpapers")
         return
 
-    # --- auto ---
+    if not AUTO_WALLPAPER:
+        apply_background(default_choice)
+        return
+
+    apply_background(default_choice)
+    time.sleep(INTERVAL * 60)
+
     if RANDOM_MODE:
-        last = None
+        last = default_choice
 
         while True:
             available = [f for f in files if f != last] or files
@@ -250,7 +296,7 @@ def main():
             time.sleep(INTERVAL * 60)
 
     else:
-        pool = files[:]
+        pool = [f for f in files if f != default_choice]
         random.shuffle(pool)
 
         while True:
