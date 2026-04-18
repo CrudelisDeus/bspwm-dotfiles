@@ -211,6 +211,7 @@ config/bspwm/bin/__pycache__/
 # vm
 config/*
 ## wm
+config/bspwm/conf/**
 !config/bspwm/**
 !config/bspwm/
 config/bspwm/**/__pycache__/
@@ -252,3 +253,4 @@ config/nvim/lazy-lock.json
 !/config/fastfetch/
 !/config/fastfetch/**
 
+config/bspwm/conf/

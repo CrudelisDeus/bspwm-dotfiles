@@ -4,6 +4,8 @@
 # Uses global font size if set, otherwise applies individual values
 # Cleans duplicates and ensures correct config formatting
 
+#!/usr/bin/python
+
 from pathlib import Path
 import re
 import subprocess
@@ -15,6 +17,36 @@ FONT_SIZE_KITTY = '10.5'
 FONT_SIZE_POLYBAR = '10;2'
 # <==============================
 
+
+def ensure_font_config_file() -> Path:
+    conf_dir = Path.home() / ".config" / "bspwm" / "conf"
+    conf_dir.mkdir(parents=True, exist_ok=True)
+
+    font_file = conf_dir / "font.txt"
+    if not font_file.exists():
+        font_file.touch()
+
+    return font_file
+
+
+def write_font_values_to_file() -> bool:
+    try:
+        font_file = ensure_font_config_file()
+
+        content = (
+            f"FONT_SIZE_GLOBAL={FONT_SIZE_GLOBAL}\n"
+            f"FONT_SIZE_KITTY={FONT_SIZE_KITTY}\n"
+            f"FONT_SIZE_POLYBAR={FONT_SIZE_POLYBAR}\n"
+        )
+
+        font_file.write_text(content)
+        return True
+
+    except Exception as e:
+        print(f"font file error: {e}")
+        return False
+
+
 def reload_polybar():
     subprocess.run(["killall", "-q", "polybar"], stderr=subprocess.DEVNULL)
     subprocess.run(
@@ -23,9 +55,10 @@ def reload_polybar():
         stderr=subprocess.DEVNULL,
     )
 
+
 def change_kitty_font() -> bool:
     try:
-        path = Path.home() / ".config/kitty/kitty.conf"
+        path = Path.home() / ".config" / "kitty" / "kitty.conf"
         text = path.read_text()
 
         font_size = FONT_SIZE_GLOBAL if FONT_SIZE_GLOBAL else FONT_SIZE_KITTY
@@ -69,7 +102,7 @@ def change_kitty_font() -> bool:
 
 def change_polybar_font() -> bool:
     try:
-        path = Path.home() / ".config/polybar/config.ini"
+        path = Path.home() / ".config" / "polybar" / "config.ini"
         text = path.read_text()
 
         font_size = FONT_SIZE_GLOBAL if FONT_SIZE_GLOBAL else FONT_SIZE_POLYBAR
@@ -91,6 +124,11 @@ def change_polybar_font() -> bool:
 
 
 def main():
+    if write_font_values_to_file():
+        print("OK: font.txt updated")
+    else:
+        print("FAILED: font.txt updated")
+
     if change_kitty_font():
         print("OK: kitty font_size changed")
     else:
