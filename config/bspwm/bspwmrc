@@ -1,10 +1,5 @@
 #! /bin/sh
 
-#   / _ \
-# \_\(_)/_/  github: CrudelisDeus
-#  _//o\\_   email:  karakurt.deus@gmail.com
-#   /   \
-
 pgrep -x sxhkd >/dev/null || sxhkd &
 pgrep -x dunst >/dev/null || dunst &
 pgrep -x udiskie >/dev/null || udiskie --tray &
@@ -27,6 +22,7 @@ setxkbmap -layout us,ru -option grp:alt_shift_toggle &
 # -------------------
 
 # --- wallpaper -----------------------
+pkill -f "/home/dmytro/.config/bspwm/bin/script_select_background.py"
 ~/.config/bspwm/bin/script_select_background.py &
 # -------------------------------------
 

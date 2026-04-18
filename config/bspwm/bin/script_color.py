@@ -30,17 +30,30 @@ def ensure_color_file() -> Path:
     color_file = conf_dir / "color.txt"
 
     if not color_file.exists():
-        color_file.write_text(f"{MAIN}\n")
+        color_file.write_text(
+            """# MAIN:
+# main accent color
+# example: MAIN=#329DA4
+MAIN=#329DA4
+"""
+        )
 
     return color_file
 
 def get_main_color() -> str:
+    path = Path.home() / ".config/bspwm/conf/color.txt"
+
     try:
-        path = Path.home() / ".config/bspwm/conf/color.txt"
-        if path.exists():
-            value = path.read_text().strip()
-            if value:
-                return value
+        for line in path.read_text().splitlines():
+            line = line.strip()
+
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+
+            key, value = line.split("=", 1)
+
+            if key.strip() == "MAIN":
+                return value.strip()
     except:
         pass
 
