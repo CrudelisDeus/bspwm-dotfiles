@@ -30,6 +30,10 @@ setxkbmap -layout us,ru -option grp:alt_shift_toggle &
 ~/.config/bspwm/bin/script_select_background.py &
 # -------------------------------------
 
+# --- clolor
+~/.config/bspwm/bin/script_color.py &
+# ---------
+
 # ---monitor
 sleep 2
 

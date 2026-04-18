@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 from pathlib import Path
 import re
@@ -232,7 +232,7 @@ def main():
         print("FAILED: MAIN and FOREGROUND fastfetch colors")
 
     reload_dunst()
-    reload_bspwm()
+    #reload_bspwm()
 
 if __name__ == '__main__':
     main()
