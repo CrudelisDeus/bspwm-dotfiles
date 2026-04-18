@@ -23,6 +23,29 @@ COLOR_BACKGROUND = "#000000"
 RESET = "\033[0m"
 # <==============================
 
+def ensure_color_file() -> Path:
+    conf_dir = Path.home() / ".config" / "bspwm" / "conf"
+    conf_dir.mkdir(parents=True, exist_ok=True)
+
+    color_file = conf_dir / "color.txt"
+
+    if not color_file.exists():
+        color_file.write_text(f"{MAIN}\n")
+
+    return color_file
+
+def get_main_color() -> str:
+    try:
+        path = Path.home() / ".config/bspwm/conf/color.txt"
+        if path.exists():
+            value = path.read_text().strip()
+            if value:
+                return value
+    except:
+        pass
+
+    return MAIN
+
 def hex_to_i3lock(hex_color: str) -> str:
     return hex_color.lstrip("#") + "FF"
 
@@ -178,7 +201,10 @@ def change_bspwmrc() -> bool:
 
 # start program
 def main():
+    ensure_color_file()
 
+    global MAIN
+    MAIN = get_main_color()
     # MAIN COLOR
     if change_bspwmrc():
         print("OK: MAIN bspwmrc select color")
