@@ -1,36 +1,49 @@
 #! /bin/sh
 
+#       _ /\      /\ _
+#      / X  \.--./  X \
+#     /_/ \/`    `\/ \_\
+#    /|(`-/\_/)(\_/\-`)|\
+#   ( |` (_(.oOOo.)_) `| )
+#   ` |  `//\(  )/\\`  | `
+#     (  // ()\/() \\  )
+#      ` (   \   /   ) `
+#         \         /
+#          `       `
+
+# hotkey
 pgrep -x sxhkd >/dev/null || sxhkd &
+# notification daemon
 pgrep -x dunst >/dev/null || dunst &
+# usb auto mount
 pgrep -x udiskie >/dev/null || udiskie --tray &
 
-# --- env --------------------------
+# env
 export XDG_CURRENT_DESKTOP='bspwm'
 export _JAVA_AWT_WM_NONREPARENTING=1
-# ----------------------------------
+# ===
 
-# ---compositor
+# compositor
 picom --config ~/.config/picom/picom.conf &
-# --------------
-
-# ---copylist
+# copylist
 greenclip daemon &
-# -----------
-
-# ---change language
+# change language
 setxkbmap -layout us,ru -option grp:alt_shift_toggle &
-# -------------------
 
-# --- wallpaper -----------------------
+# wallpaper select
 pkill -f "/home/dmytro/.config/bspwm/bin/script_select_background.py"
 ~/.config/bspwm/bin/script_select_background.py &
-# -------------------------------------
+# ================
 
-# --- clolor
+# color select
 ~/.config/bspwm/bin/script_color.py &
-# ---------
+# ============
 
-# ---monitor
+# font select
+~/.config/bspwm/bin/script_font.py
+# ==========
+
+# monitor configure
 sleep 2
 
 PRIMARY="$(xrandr --query | awk '/ primary/ {print $1; exit}')"
@@ -56,24 +69,23 @@ else
     start=$((start + 3))
   done
 fi
-# ----------
+# =================
 
-# ---bar
+# bar
 killall -q polybar
 while pgrep -x polybar >/dev/null; do sleep 0.5; done
 
 for m in $(polybar --list-monitors | cut -d: -f1); do
   MONITOR="$m" polybar main &
 done
-# ------
+# ===
 
-# --- theme ------------------------------
+# theme
 bspc config border_width 2
 bspc config window_gap 5
 bspc config focused_border_color "#329DA4"
-#bspc config normal_border_color "#000000"
-#-----------------------------------------
 
 bspc config split_ratio 0.52
 bspc config borderless_monocle true
 bspc config gapless_monocle true
+# =====
