@@ -147,13 +147,13 @@ std_pkg = [
 yay_pkg = [
     "base-devel",
     "git",
-    "tokyonight-gtk-theme-git",
 ]
 
 yay_list_pkg = [
     "greenclip",
     "i3lock-color",
     "xwinwrap-git",
+    "tokyonight-gtk-theme-git",
 ]
 
 work_and_home_pkg = [
