@@ -1,50 +1,53 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 # Simple font manager for kitty and polybar
 # Uses global font size if set, otherwise applies individual values
 # Cleans duplicates and ensures correct config formatting
 
-#!/usr/bin/python
-
 from pathlib import Path
 import re
 import subprocess
 
-# GLOBAL FONT SIZE
-# <==============================
-FONT_SIZE_GLOBAL = ''
-FONT_SIZE_KITTY = '10.5'
-FONT_SIZE_POLYBAR = '10;2'
-# <==============================
 
+def load_config():
+    conf_file = Path.home() / ".config" / "bspwm" / "conf" / "font.txt"
 
-def ensure_font_config_file() -> Path:
-    conf_dir = Path.home() / ".config" / "bspwm" / "conf"
-    conf_dir.mkdir(parents=True, exist_ok=True)
+    default = """# FONT_SIZE_GLOBAL:
+# if set, overrides kitty and polybar values
+FONT_SIZE_GLOBAL=
 
-    font_file = conf_dir / "font.txt"
-    if not font_file.exists():
-        font_file.touch()
+# FONT_SIZE_KITTY:
+FONT_SIZE_KITTY=10.5
 
-    return font_file
+# FONT_SIZE_POLYBAR:
+FONT_SIZE_POLYBAR=10;2
+"""
 
+    conf_file.parent.mkdir(parents=True, exist_ok=True)
 
-def write_font_values_to_file() -> bool:
-    try:
-        font_file = ensure_font_config_file()
+    if not conf_file.exists():
+        conf_file.write_text(default)
 
-        content = (
-            f"FONT_SIZE_GLOBAL={FONT_SIZE_GLOBAL}\n"
-            f"FONT_SIZE_KITTY={FONT_SIZE_KITTY}\n"
-            f"FONT_SIZE_POLYBAR={FONT_SIZE_POLYBAR}\n"
-        )
+    FONT_SIZE_GLOBAL = ""
+    FONT_SIZE_KITTY = "10.5"
+    FONT_SIZE_POLYBAR = "10;2"
 
-        font_file.write_text(content)
-        return True
+    for line in conf_file.read_text().splitlines():
+        if "=" not in line:
+            continue
 
-    except Exception as e:
-        print(f"font file error: {e}")
-        return False
+        key, value = line.strip().split("=", 1)
+        key = key.strip()
+        value = value.strip()
+
+        if key == "FONT_SIZE_GLOBAL":
+            FONT_SIZE_GLOBAL = value
+        elif key == "FONT_SIZE_KITTY":
+            FONT_SIZE_KITTY = value
+        elif key == "FONT_SIZE_POLYBAR":
+            FONT_SIZE_POLYBAR = value
+
+    return FONT_SIZE_GLOBAL, FONT_SIZE_KITTY, FONT_SIZE_POLYBAR
 
 
 def reload_polybar():
@@ -56,12 +59,17 @@ def reload_polybar():
     )
 
 
-def change_kitty_font() -> bool:
+def change_kitty_font(font_size_global: str, font_size_kitty: str) -> bool:
     try:
         path = Path.home() / ".config" / "kitty" / "kitty.conf"
-        text = path.read_text()
 
-        font_size = FONT_SIZE_GLOBAL if FONT_SIZE_GLOBAL else FONT_SIZE_KITTY
+        if not path.exists():
+            print("kitty error: kitty.conf not found")
+            return False
+
+        text = path.read_text()
+        font_size = font_size_global if font_size_global else font_size_kitty
+
         if not font_size:
             return False
 
@@ -74,7 +82,7 @@ def change_kitty_font() -> bool:
             if stripped in {"P", "H.5"}:
                 continue
 
-            if re.match(r'^\s*font_size\s+', line):
+            if re.match(r"^\s*font_size\s+", line):
                 continue
 
             cleaned_lines.append(line)
@@ -85,7 +93,7 @@ def change_kitty_font() -> bool:
         for line in cleaned_lines:
             new_lines.append(line)
 
-            if re.match(r'^\s*font_family\s+', line) and not inserted:
+            if re.match(r"^\s*font_family\s+", line) and not inserted:
                 new_lines.append(f"font_size {font_size}")
                 inserted = True
 
@@ -100,12 +108,17 @@ def change_kitty_font() -> bool:
         return False
 
 
-def change_polybar_font() -> bool:
+def change_polybar_font(font_size_global: str, font_size_polybar: str) -> bool:
     try:
         path = Path.home() / ".config" / "polybar" / "config.ini"
-        text = path.read_text()
 
-        font_size = FONT_SIZE_GLOBAL if FONT_SIZE_GLOBAL else FONT_SIZE_POLYBAR
+        if not path.exists():
+            print("polybar error: config.ini not found")
+            return False
+
+        text = path.read_text()
+        font_size = font_size_global if font_size_global else font_size_polybar
+
         if not font_size:
             return False
 
@@ -124,17 +137,19 @@ def change_polybar_font() -> bool:
 
 
 def main():
-    if write_font_values_to_file():
-        print("OK: font.txt updated")
-    else:
-        print("FAILED: font.txt updated")
+    font_size_global, font_size_kitty, font_size_polybar = load_config()
 
-    if change_kitty_font():
+    print("Loaded config:")
+    print(f"FONT_SIZE_GLOBAL={font_size_global}")
+    print(f"FONT_SIZE_KITTY={font_size_kitty}")
+    print(f"FONT_SIZE_POLYBAR={font_size_polybar}")
+
+    if change_kitty_font(font_size_global, font_size_kitty):
         print("OK: kitty font_size changed")
     else:
         print("FAILED: kitty font_size changed")
 
-    if change_polybar_font():
+    if change_polybar_font(font_size_global, font_size_polybar):
         print("OK: polybar font size changed")
     else:
         print("FAILED: polybar font size changed")
@@ -142,5 +157,5 @@ def main():
     reload_polybar()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
