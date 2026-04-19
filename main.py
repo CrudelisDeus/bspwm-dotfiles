@@ -127,11 +127,27 @@ std_pkg = [
 
     # network
     "networkmanager",
+
+    # gtk
+    "gtk3",
+    "gtk4",
+    "glib2",
+    "gdk-pixbuf2",
+    "pango",
+    "cairo",
+    "atk",
+    "dconf",
+    "gsettings-desktop-schemas",
+    "adwaita-icon-theme",
+    "xdg-desktop-portal",
+    "xdg-desktop-portal-gtk",
+    "gtk3-demos",
 ]
 
 yay_pkg = [
     "base-devel",
     "git",
+    "tokyonight-gtk-theme-git",
 ]
 
 yay_list_pkg = [
