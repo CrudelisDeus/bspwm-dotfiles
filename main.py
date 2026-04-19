@@ -142,6 +142,7 @@ std_pkg = [
     "xdg-desktop-portal",
     "xdg-desktop-portal-gtk",
     "gtk3-demos",
+    "lxappearance",
 ]
 
 yay_pkg = [
