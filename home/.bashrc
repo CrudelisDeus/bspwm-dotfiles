@@ -13,6 +13,8 @@ alias top='btop'
 alias grep='grep --color=auto'
 alias vim='nvim'
 
+stty -ixon
+
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
