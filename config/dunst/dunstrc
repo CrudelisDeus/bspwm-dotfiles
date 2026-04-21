@@ -1,4 +1,5 @@
 [global]
+    font = JetBrainsMono Nerd Font 10
     format = "<b>%a</b>\n%s\n%b"
     notification_limit = 5
 
