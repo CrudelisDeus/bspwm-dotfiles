@@ -35,6 +35,11 @@ WALLPAPER_INTERVAL_MINUTES=10
 # true  - random loop
 # false - queue loop
 WALLPAPER_RANDOM=false
+
+# RANDOM_STARTUP_WALLPAPER:
+# true  - ignore main* and start with random wallpaper
+# false - use default logic (main* or first available)
+RANDOM_STARTUP_WALLPAPER=false
 """
 
     conf_file.parent.mkdir(parents=True, exist_ok=True)
@@ -46,6 +51,7 @@ WALLPAPER_RANDOM=false
     USE_ONLY_IMAGES = True
     WALLPAPER_INTERVAL_MINUTES = 10
     WALLPAPER_RANDOM = False
+    RANDOM_STARTUP_WALLPAPER = False
 
     for line in conf_file.read_text().splitlines():
         if "=" not in line:
@@ -68,6 +74,8 @@ WALLPAPER_RANDOM=false
                 WALLPAPER_INTERVAL_MINUTES = 10
         elif k == "WALLPAPER_RANDOM":
             WALLPAPER_RANDOM = v in ("true", "1", "yes")
+        elif k == "RANDOM_STARTUP_WALLPAPER":
+            RANDOM_STARTUP_WALLPAPER = v in ("true", "1", "yes")
 
     if USE_ONLY_VIDEOS and USE_ONLY_IMAGES:
         USE_ONLY_VIDEOS = False
@@ -79,6 +87,7 @@ WALLPAPER_RANDOM=false
         USE_ONLY_IMAGES,
         WALLPAPER_INTERVAL_MINUTES,
         WALLPAPER_RANDOM,
+        RANDOM_STARTUP_WALLPAPER,
     )
 
 
@@ -260,7 +269,14 @@ def apply_background(choice):
 
 
 def main():
-    AUTO_WALLPAPER, USE_ONLY_VIDEOS, USE_ONLY_IMAGES, INTERVAL, RANDOM_MODE = load_config()
+    (
+        AUTO_WALLPAPER,
+        USE_ONLY_VIDEOS,
+        USE_ONLY_IMAGES,
+        INTERVAL,
+        RANDOM_MODE,
+        RANDOM_STARTUP_WALLPAPER,
+    ) = load_config()
 
     files = get_filtered_backgrounds(
         get_background_list(),
@@ -272,7 +288,10 @@ def main():
         print("No wallpapers")
         return
 
-    default_choice = get_default_background(files)
+    if RANDOM_STARTUP_WALLPAPER:
+        default_choice = random.choice(files)
+    else:
+        default_choice = get_default_background(files)
 
     if default_choice is None:
         print("No wallpapers")

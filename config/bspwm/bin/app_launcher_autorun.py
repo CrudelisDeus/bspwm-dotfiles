@@ -8,13 +8,13 @@ from app_launcher import open_on_desktop, open_link_in_browser
 def load_config():
     conf_file = Path.home() / ".config" / "bspwm" / "conf" / "run_workspaces.txt"
 
-    default = """# TYPE|TARGET|DESKTOP|RULES_COUNT
+    default = """# TYPE|RULE_CLASS|COMMAND|DESKTOP|RULES_COUNT
 
-app|obsidian|4|1
-url|https://chatgpt.com/|5|1
-app|TelegramDesktop|6|1
-url|https://music.youtube.com|6|1
-app|discord|6|2
+app|obsidian|obsidian|4|1
+url||https://chatgpt.com/|5|1
+app|TelegramDesktop|Telegram|6|1
+url||https://music.youtube.com|6|1
+app|discord|discord|6|2
 """
 
     conf_file.parent.mkdir(parents=True, exist_ok=True)
@@ -32,23 +32,25 @@ app|discord|6|2
 
         parts = [p.strip() for p in line.split("|")]
 
-        if len(parts) < 3:
+        if len(parts) < 4:
             continue
 
         action_type = parts[0]
-        target = parts[1]
-        desktop = parts[2]
+        rule_class = parts[1]
+        command = parts[2]
+        desktop = parts[3]
         rules_count = 1
 
-        if len(parts) >= 4 and parts[3]:
+        if len(parts) >= 5 and parts[4]:
             try:
-                rules_count = int(parts[3])
+                rules_count = int(parts[4])
             except ValueError:
                 rules_count = 1
 
         actions.append({
             "type": action_type,
-            "target": target,
+            "rule_class": rule_class,
+            "command": command,
             "desktop": desktop,
             "rules_count": rules_count,
         })
@@ -59,15 +61,15 @@ app|discord|6|2
 def run_actions(actions, delay: float = 1.0):
     for action in actions:
         action_type = action["type"]
-        target = action["target"]
+        rule_class = action["rule_class"]
+        command = action["command"]
         desktop = action["desktop"]
         rules_count = action["rules_count"]
 
         if action_type == "app":
-            open_on_desktop(target, [target], desktop, rules_count=rules_count)
-
+            open_on_desktop(rule_class, [command], desktop, rules_count=rules_count)
         elif action_type == "url":
-            open_link_in_browser(target, desktop)
+            open_link_in_browser(command, desktop)
 
         time.sleep(delay)
 
