@@ -84,6 +84,30 @@ def check_aur_updates() -> list[str]:
     return [line for line in result.stdout.splitlines() if line.strip()]
 
 
+def get_installed_aur_packages() -> list[str]:
+    if not has("yay"):
+        print("yay not installed (skip installed AUR packages check)")
+        return []
+
+    result = subprocess.run(
+        ["yay", "-Qm"],
+        capture_output=True,
+        text=True,
+    )
+
+    packages = []
+    for line in result.stdout.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+
+        parts = line.split()
+        if parts:
+            packages.append(parts[0])
+
+    return packages
+
+
 def upgrade_repo() -> None:
     print("\nUpgrading repo packages...\n")
     run(["sudo", "pacman", "-Syu"])
@@ -96,6 +120,26 @@ def upgrade_aur() -> None:
 
     print("\nUpgrading AUR packages...\n")
     run(["yay", "-Sua"])
+
+
+def rebuild_aur_packages(packages: list[str]) -> None:
+    if not has("yay"):
+        print("yay not installed (skip AUR rebuild)")
+        return
+
+    if not packages:
+        print("No installed AUR packages found")
+        return
+
+    print(f"\nFound {len(packages)} installed AUR packages\n")
+    for pkg in packages:
+        print(pkg)
+
+    if ask("\nRebuild all installed AUR packages?"):
+        print("\nRebuilding installed AUR packages...\n")
+        run(["yay", "-S", *packages, "--noconfirm"])
+    else:
+        print("\nSkip rebuild AUR packages")
 
 
 def main() -> None:
@@ -125,9 +169,11 @@ def main() -> None:
 
     if aur_count > 0 and ask("\nUpgrade AUR packages?"):
         upgrade_aur()
-    else:
-        print("\nDone.")
 
+    installed_aur_packages = get_installed_aur_packages()
+    rebuild_aur_packages(installed_aur_packages)
+
+    print("\nDone.")
     input("\nPress Enter to exit...")
 
 
