@@ -47,7 +47,6 @@ def update_mirrors() -> None:
         return
 
     print("\nUpdating mirrors...\n")
-
     run([
         "sudo", "reflector",
         "--latest", "10",
@@ -108,18 +107,27 @@ def get_installed_aur_packages() -> list[str]:
     return packages
 
 
+def is_installed(pkg: str) -> bool:
+    result = subprocess.run(
+        ["pacman", "-Q", pkg],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+    return result.returncode == 0
+
+
 def upgrade_repo() -> None:
     print("\nUpgrading repo packages...\n")
     run(["sudo", "pacman", "-Syu"])
 
 
-def upgrade_aur() -> None:
+def rebuild_package(pkg: str) -> None:
     if not has("yay"):
-        print("yay not installed (skip AUR upgrade)")
+        print("yay not installed (skip package rebuild)")
         return
 
-    print("\nUpgrading AUR packages...\n")
-    run(["yay", "-Sua"])
+    print(f"\nRebuilding {pkg}...\n")
+    run(["yay", "-S", pkg, "--noconfirm"])
 
 
 def rebuild_aur_packages(packages: list[str]) -> None:
@@ -167,11 +175,18 @@ def main() -> None:
         for update in aur_updates:
             print(update)
 
-    if aur_count > 0 and ask("\nUpgrade AUR packages?"):
-        upgrade_aur()
+    if is_installed("greenclip"):
+        print("\nDetected installed package: greenclip")
+        print("greenclip often breaks after ghc / haskell library updates.")
+        if ask("Rebuild greenclip now?"):
+            rebuild_package("greenclip")
 
     installed_aur_packages = get_installed_aur_packages()
-    rebuild_aur_packages(installed_aur_packages)
+    if installed_aur_packages:
+        if ask("\nRebuild installed AUR packages too?"):
+            rebuild_aur_packages(installed_aur_packages)
+    else:
+        print("\nNo installed AUR packages found")
 
     print("\nDone.")
     input("\nPress Enter to exit...")
