@@ -143,6 +143,9 @@ std_pkg = [
     "xdg-desktop-portal-gtk",
     "gtk3-demos",
     "lxappearance",
+
+    # calendar
+    "calcurse",
 ]
 
 yay_pkg = [
