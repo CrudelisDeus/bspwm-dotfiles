@@ -3,6 +3,7 @@
 from pathlib import Path
 import re
 import subprocess
+import tempfile
 
 COLOR_CONF = Path.home() / ".config" / "bspwm" / "conf" / "color.txt"
 
@@ -23,8 +24,19 @@ def load_main_color():
 
 color = load_main_color()
 
-subprocess.Popen([
-    "bash",
-    "-lc",
-    f'kitty --override confirm_os_window_close=0 --config <(echo "color1 {color}"; echo "color9 {color}") calcurse'
-])
+cfg = tempfile.NamedTemporaryFile("w", delete=False, suffix=".conf")
+cfg.write(f"color1 {color}\ncolor9 {color}\n")
+cfg.close()
+
+subprocess.Popen(
+    [
+        "kitty",
+        "--override", "confirm_os_window_close=0",
+        "--config", cfg.name,
+        "bash",
+        "-lc",
+        "calcurse || bash",
+    ],
+    stdin=subprocess.DEVNULL,
+    start_new_session=True,
+)
